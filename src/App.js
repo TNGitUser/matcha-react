@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {
@@ -7,12 +7,26 @@ import {
   Route,
   Redirect
 } from "react-router-dom"; 
+import { Button } from "semantic-ui-react";
 
 import {MenuBar} from './components/Navigation/NavBar.js';
 
-class App extends React.Component {
-  render() {
+const App = () => {
+  const [machin, setMachin] = useState(0);
+  const link = (i) => {
     return (
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <Button onClick={() => {setMachin(machin+1)}}></Button>
+        <p>
+          You used <code>link {i}</code>.
+          Machin = {machin}!
+        </p>
+      </header>
+    );
+  }
+  
+  return(
       <Router>
         <div className="App">
         <MenuBar items_left={["Home", "Link2", "Link3"]} items_right={["Sign"]} active='1'/>
@@ -35,11 +49,9 @@ class App extends React.Component {
         </Switch>
         </div>
       </Router>
-    )
-  }
-}
+)}
 
-function home() {
+const home = () => {
   return (
     <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
@@ -58,15 +70,5 @@ function home() {
   );
 }
 
-function link(i) {
-  return (
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        You used <code>link {i}</code>.
-      </p>
-    </header>
-  );
-}
 
 export default App;
