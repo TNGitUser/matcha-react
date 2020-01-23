@@ -1,43 +1,57 @@
 import React from 'react';
-import { Menu } from 'semantic-ui-react';
-import { Link } from "react-router-dom"; 
+import { Menu, Image, Visibility } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
+import propTypes from 'prop-types';
+
+const menuStyle = {
+  borderRadius: 0,
+  //transition: 'box-shadow 0.5s ease, padding 0.5s ease',
+}
+
+const fixedMenuStyle = {
+  backgroundColor: '#fff',
+  border: '1px solid #ddd',
+  boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.2)',
+}
+
 
 export class MenuBar extends React.Component {
+
     constructor(props) {
-      var i_r, i_l, i_a;
+      var i_r, i_l, i_a, link;
   
       super(props);
-      if (!props) {
-        this.state = {
-          activeItem: null,
-          items_left: null,
-          items_right: null,
-        };
-      } else {
-        i_r = !(props['items_right']) ? null : props['items_right'].slice();
-        i_l = !(props['items_left']) ? null : props['items_left'].slice();
-        i_a = null;
-        if (i_r || i_l) {
-            
-        }
-        this.state = {
-          activeItem: i_a,
-          items_left: i_l,
-          items_right: i_r,
-        };
-      }
+
+      i_r = !(props['items_right']) ? null : props['items_right'].slice();
+      i_l = !(props['items_left']) ? null : props['items_left'].slice();
+      link = !(props['path']) ? null : props['path'].slice();
+      i_a = null;
+      this.state = {
+        cur : 0,
+        activeItem: i_a,
+        items_left: i_l,
+        items_right: i_r,
+        icon: props['icon'],
+        path: link,
+        menuFixe: false,
+      };
     }
+
+    
+    stickTopMenu = () => this.setState({ menuFixed: true })
+    unStickTopMenu = () => this.setState({ menuFixed: false })
   
+    updateCur = () => this.setState({cur: this.state.cur + 1})
     handleItemClick = (e, { name }) => this.setState({ activeItem: null })
   
-    createMenu = (items) => {
+    createMenu = (items, start) => {
       let output = [];
   
       if(!items) return ;
       for (let i = 0; i < items.length; i++) {
         output.push(<Menu.Item
             as={Link}
-            to={items[i]}
+            to={this.state.path[start]}
             key={items[i]}
             name={items[i]}
             active={this.state.activeItem === items[i]}
@@ -45,19 +59,37 @@ export class MenuBar extends React.Component {
         >
           {items[i]}
         </Menu.Item>);
+        start++;
       }
       return output;
     };
   
+    show_icon = () => {
+      if (this.state.icon) {
+        return <Image src={this.state.icon} size='mini' ></Image>;
+      }
+    };
+
     render() {
-  
+      const { menuFixed } = this.state
+
       return (
-            <Menu>
-                {this.createMenu(this.state.items_left)}
-                <Menu.Menu position='right'>
-                    {this.createMenu(this.state.items_right)}
-                </Menu.Menu>
-            </Menu>
+      <Visibility
+      onBottomPassed={this.stickTopMenu}
+      onBottomVisible={this.unStickTopMenu}
+      once={false}>
+         <Menu
+            borderless
+            fixed={menuFixed ? 'top' : undefined}
+            style={menuFixed ? fixedMenuStyle : menuStyle}
+          >
+            {this.show_icon()}
+            {this.createMenu(this.state.items_left, 0)}
+            <Menu.Menu position='right'>
+                {this.createMenu(this.state.items_right, this.state.items_left.length)}
+            </Menu.Menu>
+          </Menu>
+      </Visibility>
       )
     }
   }

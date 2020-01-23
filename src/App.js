@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom"; 
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"; 
 import { Button } from "semantic-ui-react";
+import "./components/layouts/sticky.js";
 
-import {MenuBar} from './components/Navigation/NavBar.js';
+import { MenuBar } from './components/Navigation/NavBar.js';
+import StickyLayout from './components/layouts/sticky.js';
 
 const App = () => {
   const [machin, setMachin] = useState(0);
@@ -29,22 +26,23 @@ const App = () => {
   return(
       <Router>
         <div className="App">
-        <MenuBar items_left={["Home", "Link2", "Link3"]} items_right={["Sign"]} active='1'/>
+        <MenuBar items_left={["Pourquoi l'amour", "Le simulateur de l'amour", "L'équipe"]} items_right={["Connexion", "Inscription"]} path={["patate", "shop", "test", "sign_in", "sign_on"]} icon={logo} active='1'/>
+        
         <Switch>
-          <Route path="/Home">
+          <Route path="/patate">
             {home()}
           </Route>
-          <Route path="/Link2">
+          <Route path="/shop">
             {link(2)}
           </Route>
-          <Route path="/Link3">
-            {link(3)}
+          <Route path="/test">
+            <StickyLayout/>
           </Route>
-          <Route path="/Sign">
+          <Route path="/sign_in">
             {home()}
           </Route>
-          <Route path="/">
-            <Redirect to="/Home" />
+          <Route path="/Sign">
+            <Redirect to="/patate" />
           </Route>
         </Switch>
         </div>
