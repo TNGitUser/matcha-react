@@ -5,9 +5,8 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="home">
-                <h2 className="center">Home</h2>
                 <div className="home-banner">
-
+                    <img src="img/meeting.jpg" alt="Meeting people is nice !"></img>
                 </div>
                 <div className="home-about">
                     <h4 className="center title">Matcha'Soul</h4>

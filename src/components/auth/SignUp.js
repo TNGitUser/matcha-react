@@ -62,9 +62,9 @@ export class SignUp extends Component {
                                 <input id="allow-geo" type="checkbox" className="filled-in" onChange={this.handleCheckBoxChange}/>
                                 <span htmlFor="allow-geo" >Allow geo-localisation</span>
                             </label>
-                        </p>
+                        </p>                                
                         <div className="input-field">
-                            <button className="btn pink lighten-1 z-depth-0 pulse">Login</button>
+                            <button className="btn pink lighten-1 z-depth-0 waves-effect waves-light">Login</button>
                         </div>
                     </form>
                 </div>
