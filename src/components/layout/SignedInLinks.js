@@ -12,4 +12,14 @@ const SignedInLinks = () => {
     )
 }
 
+export const SignedInLinksSidebar = () => {
+    return (
+        <div>
+            <li><NavLink to='/profiles-list' className="black-text">Profiles</NavLink></li>
+            <li><NavLink to='/lucky' className="pink-text">Lucky</NavLink></li>
+            <li><NavLink to='/' className="black-text">Log Out</NavLink></li>
+        </div>
+    )
+}
+
 export default SignedInLinks;

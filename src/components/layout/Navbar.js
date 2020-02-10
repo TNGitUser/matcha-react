@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import SignedInLinks from './SignedInLinks';
-import SignedOutLinks from './SignedOutLinks';
+import SignedInLinks, { SignedInLinksSidebar } from './SignedInLinks';
+import SignedOutLinks, { SignedOutLinksSidebar } from './SignedOutLinks';
 import M from 'materialize-css';
 
 class Navbar extends Component {
@@ -24,14 +24,7 @@ class Navbar extends Component {
                 <SignedOutLinks />
                 <a href="#!" data-target="slide-out" className="sidenav-trigger right"><i className="material-icons">menu</i></a>
                 <ul ref={Sidenav => { this.Sidenav = Sidenav; }} id="slide-out" className="sidenav">
-                    <li>
-                        <a href="#!">
-                        <i className="material-icons">cloud</i>First Link With Icon
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#!">Second Link</a>
-                    </li>
+                    <SignedInLinksSidebar/>
                 </ul>
             </nav>
         )
