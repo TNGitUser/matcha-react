@@ -1,23 +1,52 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import Axios from 'axios';
 
 export class SignIn extends Component {
     state = {
         email: '',
         password: '',
     }
+
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
         console.log(e);
+        Axios.post("http://10.12.8.18:8080/login", {email : this.state.email, password : this.state.password}).then(function (response) {
+            const data = response.data;
+            const log_status = data.login_user_status;
+            const status = log_status.status ? true : false;
+            var user = -1;
+            if (status) {
+                user = log_status.success;
+            } else {
+                if (log_status.error === "email") {
+                    var mail_input = document.getElementById("email");
+                    mail_input.classList.add("login-error");
+                    console.log("Mail error");
+                }
+                else if (log_status.error === "password") {
+                    var pwd_input = document.getElementById("password");
+                    pwd_input.classList.add("login-error");
+                    console.log("Password error");
+                }
+                else console.log("Unknown error");
+            }
+        }).catch(function (error) {
+            console.log(error);
+          });
+
     }
 
     handleChange = (e) => {
+        var input = document.getElementById(e.target.id);
+        input.classList.remove("login-error");
         this.setState({
             [e.target.id]: e.target.value
         })
     }
+
     render() {
         return (
             <div className="row">

@@ -1,5 +1,6 @@
 const initState = {
     auth : null,
+    profiles : [],
     chat : null
 }
 

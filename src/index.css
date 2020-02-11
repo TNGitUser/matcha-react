@@ -18,7 +18,6 @@ body {
 main {
   flex: 1 0 auto;
 }
-    
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -87,8 +86,25 @@ code {
   margin: 10px 15px;
 }
 
+.profilePeekActions {
+  display: flex;
+  position: relative;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.profilePeekActions a {
+  margin-top: -30px;
+}
+
+.profilePeek .card-content {
+  padding-top: 10px;
+}
+
 .profile-image {
   position: relative;
+  cursor: pointer;
 }
 
 .profile-image img {
@@ -107,5 +123,49 @@ code {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
+}
+
+.unliked {
+  background-color : #F44336 !important;
+}
+
+.liked {
+  background-color : #ffffff !important;
+}
+
+.icon-unliked {
+  color : white;
+}
+
+.icon-liked {
+  color : #F44336 !important;
+}
+
+.enabled {
+  background-color: #a6c1ee;
+}
+
+.profile-search {
+}
+
+.profile-search .collapsible-body {
+  background-color: white;
+}
+
+.collapsible-search {
+  border-top: none !important;
+  margin-top: 0px !important;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 10px -2px rgba(0,0,0,0.12), 0 10px 5px 0 rgba(0,0,0,0.2) !important;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 10px -2px rgba(0,0,0,0.12), 0 10px 5px 0 rgba(0,0,0,0.2) !important;
+}
+
+.collapsible-header {
+  justify-content: center;
+}
+
+.login-error {
+  border-bottom : 1px solid #F44336 !important;
+  -webkit-box-shadow: 0 1px 0 0 #F44336 !important;
+  box-shadow: 0 1px 0 0 #F44336 !important;
 }
