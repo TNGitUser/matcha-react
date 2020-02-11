@@ -10,7 +10,8 @@ class Navbar extends Component {
         const options = {
             inDuration: 250,
             outDuration: 200,
-            draggable: true
+            draggable: true,
+            edge : "right"
         };
         M.Sidenav.init(this.Sidenav, options);
     }
@@ -25,6 +26,7 @@ class Navbar extends Component {
                 <a href="#!" data-target="slide-out" className="sidenav-trigger right"><i className="material-icons">menu</i></a>
                 <ul ref={Sidenav => { this.Sidenav = Sidenav; }} id="slide-out" className="sidenav">
                     <SignedInLinksSidebar/>
+                    <SignedOutLinksSidebar/>
                 </ul>
             </nav>
         )

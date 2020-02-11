@@ -21,7 +21,7 @@ export class SignIn extends Component {
     render() {
         return (
             <div className="row">
-                <div className="col s8 m4 offset-s2 offset-m4 ">
+                <div className="col s8 m6 offset-s2 offset-m3 ">
                     <form className="white signin z-depth-3" onSubmit={this.handleSubmit}>
                         <h5 className="grey-text text-darken-3">Sign in</h5>
                         <div className="input-field">
@@ -34,7 +34,8 @@ export class SignIn extends Component {
                         </div>
                         <div className="input-field">
                             <button className="btn pink lighten-1 z-depth-0">Login</button>
-                            <button className="btn grey lighten-1 z-depth-1 right" onClick={() => { this.props.history.push('/forgot-password') }}>Mot de passe oublié ?</button>
+                            <button className="btn grey lighten-1 z-depth-1 right hide-on-med-and-down small" onClick={() => { this.props.history.push('/forgot-password') }}>Mot de passe oublié ?</button>
+                            <i className="material-icons hide-fw-pwd right forgot_pwd" onClick={() => { this.props.history.push('/forgot-password') }}>https</i>
                         </div>
                     </form>
                 </div>

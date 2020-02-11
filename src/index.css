@@ -65,3 +65,47 @@ code {
 .sidenav-trigger {
   color : #a6c1ee;
 }
+
+.forgot_pwd {
+  display: none;
+  cursor: pointer;
+  margin-top: 5px;
+  color: grey;
+}
+
+@media only screen and (max-width: 991px) {
+  .hide-fw-pwd {
+    display: inline;
+  }
+}
+
+.profilePeek {
+  height: 350px;
+  width: 205px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 10px 15px;
+}
+
+.profile-image {
+  position: relative;
+}
+
+.profile-image img {
+  display: block;
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  margin: 0 auto;
+  left: -50%;
+  right: auto;
+  top: 0;
+  bottom: 0;
+  width: 200%;
+}
+
+.profile-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

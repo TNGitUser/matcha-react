@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Dashboard from './components/dashboard/Dashboard';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
+import ProfileList from './components/profile/ProfileList';
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Dashboard} />
               <Route path="/profiles/:user_id" component={Profile} />
+              <Route path="/profiles-list" component={ProfileList} />
               <Route path="/signin" component={SignIn} />
               <Route path="/signup" component={SignUp} />
             </Switch>
