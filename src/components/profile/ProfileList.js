@@ -2,40 +2,36 @@ import React, { Component } from 'react';
 import ProfilePeek from './ProfilePeek';
 import M from 'materialize-css';
 import Slider from 'rc-slider';
+import { connect } from 'react-redux';
 
 const Range = Slider.Range;
 
-class CustomizedRange extends React.Component {
+export class ProfileList extends Component {
+
     constructor(props) {
       super(props);
       this.state = {
-        lowerBound: 18,
-        upperBound: 99,
-        value: [18, 26],
+        filter : {
+          lowerBound: 18,
+          upperBound: 99,
+          value: [18, 26],
+        }
       };
     }
+
     onLowerBoundChange = (e) => {
-      this.setState({ lowerBound: +e.target.value });
+      this.setState({ filter : { lowerBound: +e.target.value }});
     }
     onUpperBoundChange = (e) => {
-      this.setState({ upperBound: +e.target.value });
+      this.setState({ filter : { upperBound: +e.target.value }});
     }
     onSliderChange = (value) => {
       this.setState({
-        value,
+        filter : {
+          value,
+        }
       });
     }
-    render() {
-      return (
-        <div>
-            <label>Âge entre : {this.state.value[0]} - {this.state.value[1]}</label>
-            <Range allowCross={true} min={18} value={this.state.value} onChange={this.onSliderChange}/>
-        </div>
-      );
-    }
-  }
-
-export class ProfileList extends Component {
 
     componentDidMount() {
         var elems = document.querySelectorAll('.collapsible');
@@ -50,25 +46,28 @@ export class ProfileList extends Component {
                     <li>
                         <div className="collapsible-header"><i className="material-icons">settings</i>Filtres</div>
                         <div className="collapsible-body">
-                            <CustomizedRange></CustomizedRange>
-                            <CustomizedRange></CustomizedRange>
+                          <div>
+                              <label>Âge entre : {this.state.filter.value[0]} - {this.state.filter.value[1]}</label>
+                              <Range allowCross={true} min={18} value={this.state.filter.value} onChange={this.onSliderChange}/>
+                          </div>
                         </div>
                     </li>
                 </ul>
                 </div>
                 <div className="row profile-row s8 m8">
-                    <ProfilePeek />
-                    <ProfilePeek />
-                    <ProfilePeek />
-                    <ProfilePeek />
-                    <ProfilePeek />
-                    <ProfilePeek />
-                    <ProfilePeek />
-                    <ProfilePeek />
+                  { this.props.profiles && this.props.profiles.map((profile) => {
+                    return <ProfilePeek profile={profile} key={profile.profile_id}/>
+                  })}
                 </div>
             </div>
         )
     }
 }
 
-export default ProfileList
+const mapStateToProps = (state) => {
+  return {
+    ...state
+  }
+}
+
+export default connect(mapStateToProps)(ProfileList)

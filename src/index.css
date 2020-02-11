@@ -105,6 +105,10 @@ code {
 .profile-image {
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  max-height: 231px;
+  width: 120%;
+  margin-left: -10%;
 }
 
 .profile-image img {
@@ -117,6 +121,7 @@ code {
   top: 0;
   bottom: 0;
   width: 200%;
+  min-height: 231px;
 }
 
 .profile-row {

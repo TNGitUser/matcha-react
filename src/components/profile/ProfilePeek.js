@@ -2,12 +2,25 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom';
 
 export class ProfilePeek extends Component {
-    state = {
+    state = {}
+    /*state = {
         profile_id : 5468871046058184,
-        name : "Laura",
+        profile_picture : "/img/users/StellaCox.jpg",
+        //profile_picture : "/img/users/beautiful_female.jpg",
+        firstname : "Stella",
+        lastname : "Cox",
         age : 26,
         city : "Vernon",
         liked : false
+    }*/
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            ...props.profile
+        };
+        console.log(this.state);
     }
 
     handleLike = (e) => {
@@ -22,7 +35,7 @@ export class ProfilePeek extends Component {
         return (
             <div className="col card profilePeek">
                 <div className="profile-image activator" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>
-                    <img src="/img/beautiful_female.jpg" alt="" className="activator"/>
+                    <img src={this.state.profile_picture} alt="" className="activator"/>
                 </div>
                 <div className="profilePeekActions">
                     <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
@@ -33,7 +46,7 @@ export class ProfilePeek extends Component {
                     </a>
                 </div>
                 <div className="card-content">
-                    <span className="card-title activator grey-text center" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>Laura</span>
+        <span className="card-title activator grey-text center" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>{ this.state.firstname } { this.state.lastname }</span>
                     <p className="pink-text center">{this.state.age} ans - {this.state.city}</p>
                 </div>
             </div>
