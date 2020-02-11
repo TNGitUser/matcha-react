@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Profile from './components/profile/Profile';
-import { connect } from 'react-redux';
 import Dashboard from './components/dashboard/Dashboard';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
@@ -13,7 +12,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <Navbar></Navbar>
+          <Navbar />
             <Switch>
               <Route exact path="/" component={Dashboard} />
               <Route path="/profiles/:user_id" component={Profile} />
@@ -27,10 +26,4 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    ...state
-  }
-}
-
-export default connect(mapStateToProps)(App);
+export default App;

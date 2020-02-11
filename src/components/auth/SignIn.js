@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
+import { authLogin } from '../../store/actions/authActions';
 
 export class SignIn extends Component {
     state = {
@@ -9,10 +9,14 @@ export class SignIn extends Component {
         password: '',
     }
 
-    handleSubmit = (e) => {
+    constructor(props) {
+        super(props);
+    
+        console.log(this.props)
+    }
+
+    handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state);
-        console.log(e);
         Axios.post("http://10.12.8.18:8080/login", {email : this.state.email, password : this.state.password}).then(function (response) {
             const data = response.data;
             const log_status = data.login_user_status;
@@ -20,6 +24,7 @@ export class SignIn extends Component {
             var user = -1;
             if (status) {
                 user = log_status.success;
+                this.props.authUser(user);
             } else {
                 if (log_status.error === "email") {
                     var mail_input = document.getElementById("email");
@@ -74,9 +79,16 @@ export class SignIn extends Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state);
     return {
         ...state
     }
 }
 
-export default withRouter(connect(mapStateToProps)(SignIn))
+const mapDispatchToProps = (dispatch) => {
+    return {
+        authUser : (id) => { dispatch(authLogin(id)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn)
