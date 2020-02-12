@@ -40,7 +40,7 @@ export class ProfilePeek extends Component {
                     <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
                         <i className={"fa fa-heart " + liked_icon_style} aria-hidden="true"></i>
                     </a>
-                    <a href="#!" className="btn-floating btn-large enabled">
+                    <a href="#!" className="btn-floating btn-large disabled">
                         <i className="material-icons">message</i>
                     </a>
                 </div>

@@ -9,7 +9,6 @@ export class Profile extends Component {
         this.state = {
             profile : null
         };
-        console.log(props);
     }
 
     componentDidMount = () => {
@@ -56,19 +55,30 @@ export class Profile extends Component {
         const page = user_profile ? (
         (
             <div className="container white whole-profile z-depth-3">
-                <h4 className="center">{user_profile.firstname} {user_profile.lastname}</h4>
-                <div className="row">
-                    <div className="col s4 offset-s4 center fullprofile-holder"><img src={user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
+                <div className="row top-info">
+                    <div className="col">
+                        <div className="row s4 center fullprofile-holder"><img src={user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
+                        <div className="actions">
+                            <a href="#like" className="btn-floating btn-large waves-effect waves-light unliked">
+                                <i className="fa fa-heart" aria-hidden="true"></i>
+                            </a>
+                            <a href="#!" className="btn-floating btn-large disabled">
+                                <i className="material-icons">message</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div className="col s8 m6">
+                        <h4 className="center">{user_profile.firstname} {user_profile.lastname}</h4>
+                        <div className="divider center"></div>
+                        <h5 className="center">Biographie</h5>
+                        <p>{user_profile.bio}</p>
+                    </div>
                 </div>
+                <div className="divider center"></div>
                 <div className="row main-info">
                     <div className="col s4 center profile-info"><i className="fas fa-map-marker-alt"></i> {user_profile.city} </div>
                     <div className="col s4 center profile-info"><i className="fas fa-birthday-cake"></i> {user_profile.age} ans</div>
                     <div className="col s4 center profile-info"><i className={wants}></i> {user_profile.orientation} </div>
-                </div>
-                <div className="divider center"></div>
-                <div className="section container">
-                    <h5 className="center">Biographie</h5>
-                    <p>{user_profile.bio}</p>
                 </div>
                 <div className="divider center"></div>
                 <div className="section container">

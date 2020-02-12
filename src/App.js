@@ -6,6 +6,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import ProfileList from './components/profile/ProfileList';
+import ProfileEdit from './components/profile/ProfileEdit';
 //import ProtectedRoute from './components/auth/ProtectedRoute';
 
 /*
@@ -21,14 +22,15 @@ class App extends Component {
       <BrowserRouter>
         <div className="App">
           <Navbar />
-            <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route path="/profiles/:user_id" component={Profile} />
-              <Route path="/profiles-list" component={ProfileList} />
-              <Route path="/match" component={ProfileList} />
-              <Route path="/signin" component={SignIn} />
-              <Route path="/signup" component={SignUp} />
-            </Switch>
+          <Switch>
+            <Route exact path="/" component={Dashboard} />
+            <Route path="/profiles/:user_id" component={Profile} />
+            <Route path="/profiles-list" component={ProfileList} />
+            <Route path="/profile-edit" component={ProfileEdit} />
+            <Route path="/match" component={ProfileList} />
+            <Route path="/signin" component={SignIn} />
+            <Route path="/signup" component={SignUp} />
+          </Switch>
         </div>
       </BrowserRouter>
     );
