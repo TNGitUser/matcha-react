@@ -174,3 +174,56 @@ code {
   -webkit-box-shadow: 0 1px 0 0 #F44336 !important;
   box-shadow: 0 1px 0 0 #F44336 !important;
 }
+
+.fullprofile-image {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  height: auto;
+  width: 100%;
+}
+
+fullprofile-holder
+{
+  max-height: 300px;
+  width: 50px;
+}
+
+.main-info {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.sweet_pink {
+  color: #fbc2eb;
+}
+
+.profile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.carousel {
+  max-height: 300px;
+}
+
+.images {
+  width: 300px !important;
+  height: auto;
+}
+
+.carousel .indicators .indicator-item {
+  background-color: #a6c1ee;
+}
+
+.carousel .indicators .indicator-item.active{
+  background-color: #fbc2eb;
+}
+
+.whole-profile {
+  border-radius : 30px 30px 0 0;
+  /*border-radius : 30px ;*/
+}

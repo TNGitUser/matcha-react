@@ -20,7 +20,6 @@ export class ProfilePeek extends Component {
         this.state = {
             ...props.profile
         };
-        console.log(this.state);
     }
 
     handleLike = (e) => {
@@ -34,8 +33,8 @@ export class ProfilePeek extends Component {
         const liked_icon_style = this.state.liked ? "icon-liked" : "";
         return (
             <div className="col card profilePeek">
-                <div className="profile-image activator" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>
-                    <img src={this.state.profile_picture} alt="" className="activator"/>
+                <div className="profile-image activator" onClick={() => { this.props.history.push('/profiles/' + this.state.login) }}>
+                    <img src={this.state.profilePic} alt="" className="activator"/>
                 </div>
                 <div className="profilePeekActions">
                     <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>

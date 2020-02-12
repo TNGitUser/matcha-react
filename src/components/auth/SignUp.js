@@ -1,17 +1,25 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom';
+import Axios from 'axios';
 
 export class SignUp extends Component {
     state = {
         email: '',
         password: '',
-        firstName: '',
-        lastName: ''
+        firstname: '',
+        lastname: '',
+        login: ''
     }
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
         console.log(e);
+        Axios.post("http://10.12.9.18:8080/create_user", {...this.state}).then((response) => {
+            const data = response.data;
+            console.log(data);
+        }).catch((error) => {
+            console.log(error);
+          });
     }
 
     handleChange = (e) => {
@@ -30,6 +38,7 @@ export class SignUp extends Component {
     }
 
     render() {
+        console.log(this.props);
         return (
             <div className="row">
                 <div className="col s8 m4 offset-s2 offset-m4 ">
@@ -37,17 +46,21 @@ export class SignUp extends Component {
                         <h5 className="grey-text text-darken-3">Sign up</h5>
                         <div className="row">
                             <div className="input-field col s6">
-                                <input id="firstName" type="text" onChange={this.handleChange} className="validate" />
-                                <label htmlFor="firstName">First Name</label>
+                                <input id="firstname" type="text" onChange={this.handleChange} className="validate" />
+                                <label htmlFor="firstname">First Name</label>
                             </div>
                             <div className="input-field col s6">
-                                <input id="lastName" type="text" onChange={this.handleChange} className="validate" />
-                                <label htmlFor="lastName">Last Name</label>
+                                <input id="lastname" type="text" onChange={this.handleChange} className="validate" />
+                                <label htmlFor="lastname">Last Name</label>
                             </div>
                         </div>
                         <div className="input-field">
                             <label htmlFor="email">Email</label>
                             <input type="email" id="email" onChange={this.handleChange} className="validate"/>
+                        </div>
+                        <div className="input-field">
+                            <label htmlFor="login">Login</label>
+                            <input type="text" id="login" onChange={this.handleChange} className="validate"/>
                         </div>
                         <div className="input-field">
                             <label htmlFor="password">Password</label>
@@ -73,4 +86,4 @@ export class SignUp extends Component {
     }
 }
 
-export default withRouter(SignUp)
+export default withRouter(SignUp);

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 const Range = Slider.Range;
 
-export class ProfileList extends Component {
+class ProfileList extends Component {
 
     constructor(props) {
       super(props);
@@ -56,7 +56,7 @@ export class ProfileList extends Component {
                 </div>
                 <div className="row profile-row s8 m8">
                   { this.props.profiles && this.props.profiles.map((profile) => {
-                    return <ProfilePeek profile={profile} key={profile.profile_id}/>
+                    return <ProfilePeek profile={profile} key={profile.login}/>
                   })}
                 </div>
             </div>

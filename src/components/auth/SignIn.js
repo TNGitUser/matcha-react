@@ -4,20 +4,21 @@ import Axios from 'axios';
 import { authLogin } from '../../store/actions/authActions';
 
 export class SignIn extends Component {
-    state = {
-        email: '',
-        password: '',
-    }
-
     constructor(props) {
         super(props);
-    
-        console.log(this.props)
+
+        this.state = {
+            email: '',
+            password: '',
+            error: null
+        }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         e.preventDefault();
-        Axios.post("http://10.12.8.18:8080/login", {email : this.state.email, password : this.state.password}).then(function (response) {
+        Axios.post("http://10.12.9.18:8080/login", {email : this.state.email, password : this.state.password}).then((response) => {
             const data = response.data;
             const log_status = data.login_user_status;
             const status = log_status.status ? true : false;
@@ -25,6 +26,7 @@ export class SignIn extends Component {
             if (status) {
                 user = log_status.success;
                 this.props.authUser(user);
+                this.props.history.push("/");
             } else {
                 if (log_status.error === "email") {
                     var mail_input = document.getElementById("email");
@@ -38,7 +40,7 @@ export class SignIn extends Component {
                 }
                 else console.log("Unknown error");
             }
-        }).catch(function (error) {
+        }).catch((error) => {
             console.log(error);
           });
 
@@ -53,25 +55,29 @@ export class SignIn extends Component {
     }
 
     render() {
+        var error = this.state.error;
         return (
-            <div className="row">
-                <div className="col s8 m6 offset-s2 offset-m3 ">
-                    <form className="white signin z-depth-3" onSubmit={this.handleSubmit}>
-                        <h5 className="grey-text text-darken-3">Sign in</h5>
-                        <div className="input-field">
-                            <label htmlFor="email">Email</label>
-                            <input type="email" id="email" onChange={this.handleChange}/>
-                        </div>
-                        <div className="input-field">
-                            <label htmlFor="password">Password</label>
-                            <input type="password" id="password" onChange={this.handleChange}/>
-                        </div>
-                        <div className="input-field">
-                            <button className="btn pink lighten-1 z-depth-0">Login</button>
-                            <button className="btn grey lighten-1 z-depth-1 right hide-on-med-and-down small" onClick={() => { this.props.history.push('/forgot-password') }}>Mot de passe oublié ?</button>
-                            <i className="material-icons hide-fw-pwd right forgot_pwd" onClick={() => { this.props.history.push('/forgot-password') }}>https</i>
-                        </div>
-                    </form>
+            <div>
+                <div className="row">
+                    { error }
+                    <div className="col s8 m6 offset-s2 offset-m3 ">
+                        <form className="white signin z-depth-3" onSubmit={this.handleSubmit}>
+                            <h5 className="grey-text text-darken-3">Sign in</h5>
+                            <div className="input-field">
+                                <label htmlFor="email">Email</label>
+                                <input type="email" id="email" onChange={this.handleChange}/>
+                            </div>
+                            <div className="input-field">
+                                <label htmlFor="password">Password</label>
+                                <input type="password" id="password" onChange={this.handleChange}/>
+                            </div>
+                            <div className="input-field">
+                                <button className="btn pink lighten-1 z-depth-0">Login</button>
+                                <button className="btn grey lighten-1 z-depth-1 right hide-on-med-and-down small" onClick={() => { this.props.history.push('/forgot-password') }}>Mot de passe oublié ?</button>
+                                <i className="material-icons hide-fw-pwd right forgot_pwd" onClick={() => { this.props.history.push('/forgot-password') }}>https</i>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         )
@@ -79,7 +85,6 @@ export class SignIn extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         ...state
     }
