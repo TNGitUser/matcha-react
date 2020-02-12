@@ -46,7 +46,7 @@ export class ProfilePeek extends Component {
                     </a>
                 </div>
                 <div className="card-content">
-        <span className="card-title activator grey-text center" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>{ this.state.firstname } { this.state.lastname }</span>
+                    <span className="card-title activator grey-text center" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>{ this.state.firstname }</span>
                     <p className="pink-text center">{this.state.age} ans - {this.state.city}</p>
                 </div>
             </div>
