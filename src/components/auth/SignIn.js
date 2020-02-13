@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import Axios from 'axios';
-import { authLogin } from '../../store/actions/authActions';
+import { authLogin, getProfile } from '../../store/actions/authActions';
+import M from "materialize-css";
 
 export class SignIn extends Component {
     constructor(props) {
@@ -16,17 +17,33 @@ export class SignIn extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    askForList = (id, key) => {
+        Axios.get("http://10.12.10.19:8080/api/suggest_list?id=" + id + "&token=" + key).then(response => {
+            let profiles_get = response.data;
+            if (profiles_get) {
+                if (profiles_get.status !== 1) {
+                    M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                } else {
+                this.props.populateProfiles(profiles_get.success);
+                }
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        Axios.post("http://10.12.9.18:8080/login", {email : this.state.email, password : this.state.password}).then((response) => {
-            const data = response.data;
-            const log_status = data.login_user_status;
+        Axios.post("http://10.12.10.19:8080/api/login", {email : this.state.email, password : this.state.password}).then((response) => {
+            const log_status = response.data;
             const status = log_status.status ? true : false;
             var user = -1;
             if (status) {
-                user = log_status.success;
-                this.props.authUser(user);
+                user = log_status.id;
+                let token = log_status.token;
+                this.props.authUser(user, token);
                 this.props.history.push("/");
+                this.askForList(user, token);
             } else {
                 if (log_status.error === "email") {
                     var mail_input = document.getElementById("email");
@@ -92,7 +109,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        authUser : (id) => { dispatch(authLogin(id)) }
+        authUser : (id, token) => { dispatch(authLogin(id, token)) },
+        populateProfiles : (profiles) => { dispatch(getProfile(profiles)) }
     }
 }
 

@@ -1,5 +1,8 @@
 const initState = {
-    auth : null,
+    auth : {
+        uid : -1,
+        key : null
+    },
     profiles : [
         { login : 0,
             profilePic : "/img/users/StellaCox.jpg",
@@ -35,7 +38,8 @@ const initState = {
     images : ["/img/users/Shulgin1.jpg", "/img/users/Shulgin2.jpg", "/img/users/Shulgin3.jpg",]},
     ],
     chat : null,
-    tags : ["#La photographie", "#Les voyages", "#La mode", "#La beauté", "#Sports", "#Humanité", "#Féminisme", "#Cinéma", "#L'équitation",]
+    tags : ["#La photographie", "#Les voyages", "#La mode", "#La beauté", "#Sports", "#Humanité", "#Féminisme", "#Cinéma", "#L'équitation",],
+    filtered_profiles : []
 }
 
 function getIndex(value, arr, prop) {
@@ -51,13 +55,34 @@ const rootReducer = (state = initState, action) => {
     if (action.type === "AUTH_LOGOUT") {
         return {
             ...state,
-            auth : null
+            auth : {
+                uid : -1,
+                key : null
+            },
+            profiles : [],
+            chat : [],
+            tags : [],
         }
     }
     else if (action.type === "AUTH_USER") {
         return {
             ...state,
-            auth : action.uid
+            auth : {
+                uid : action.payload.uid,
+                key : action.payload.key
+            }
+        }
+    }
+    else if (action.type === "SEED_TAGS") {
+        return {
+            ...state,
+            tags : action.payload.tags
+        }
+    }
+    else if (action.type === "SEED_PROFILES") {
+        return {
+            ...state,
+            profiles : action.profiles
         }
     }
     else if (action.type === "PROFILE_UPDATE") {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import M from 'materialize-css';
+import Axios from 'axios';
 
 export class Profile extends Component {
     constructor(props) {
@@ -12,8 +13,18 @@ export class Profile extends Component {
     }
 
     componentDidMount = () => {
-        this.setState({
-            profile : this.props.profiles[this.props.match.params.user_id]
+        Axios.get("http://10.12.10.19:8080/api/profil/" + this.props.match.params['user_id'] + "?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
+            console.log(response.data);
+            let status = response.data.status;
+
+            if (status === 0) {
+                M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+            } else {
+                this.setState({
+                    profile : response.data.success
+            })}
+        }).catch(err => {
+            console.log(err);
         })
 
         var elems = document.querySelectorAll('.carousel');
@@ -22,7 +33,7 @@ export class Profile extends Component {
 
     componentDidUpdate() {
         let carousel = document.querySelector('.carousel');
-        M.Carousel.init(carousel, {indicators:true});
+        M.Carousel.init(carousel, {indicators:true, fullWidth:false, dist:0});
     }
 
     render() {
@@ -31,6 +42,7 @@ export class Profile extends Component {
         var wants = null;
         var sex = null;
         var pictures = null;
+        var arr = null;
         if (user_profile) {
             
             sex = user_profile.gender;
@@ -41,6 +53,9 @@ export class Profile extends Component {
             wants = user_profile.orientation === "Bisexual" ? "fas fa-venus-mars" : user_profile.orientation === "Hétérosexuel" ? hetero : homo;
             wants += " sweet_pink";
 
+            if (user_profile.arr != null) {
+                arr = ", " + user_profile.arr + "ème";
+            }
             pictures = user_profile.images.length ? (
                 <div className="carousel">
                 <h5 className="center">Petit aperçu de moi ;)</h5>
@@ -65,6 +80,9 @@ export class Profile extends Component {
                             <a href="#!" className="btn-floating btn-large disabled">
                                 <i className="material-icons">message</i>
                             </a>
+                            <a href="#!" className="btn-floating btn-large red">
+                                <i className="material-icons">close</i>
+                            </a>
                         </div>
                     </div>
                     <div className="col s8 m6">
@@ -76,7 +94,7 @@ export class Profile extends Component {
                 </div>
                 <div className="divider center"></div>
                 <div className="row main-info">
-                    <div className="col s4 center profile-info"><i className="fas fa-map-marker-alt"></i> {user_profile.city} </div>
+                    <div className="col s4 center profile-info"><i className="fas fa-map-marker-alt"></i> {user_profile.city}{ arr } </div>
                     <div className="col s4 center profile-info"><i className="fas fa-birthday-cake"></i> {user_profile.age} ans</div>
                     <div className="col s4 center profile-info"><i className={wants}></i> {user_profile.orientation} </div>
                 </div>

@@ -209,6 +209,9 @@ code {
 
 .carousel {
   max-height: 300px;
+  overflow: visible;
+  /*perspective: none;
+  -webkit-perspective: none;*/
 }
 
 .images {
@@ -229,6 +232,7 @@ code {
   padding-top: 10px;
   border-radius : 30px 30px 0 0;
   /*border-radius : 30px ;*/
+  overflow: hidden;
 }
 
 .top-info {
@@ -268,4 +272,20 @@ code {
   max-width: 50%;
   margin: 0 auto;
   display: block;
+}
+
+.filter-tags {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.tag-filter .chips .autocomplete-content {
+  max-height: 250px !important;
+  width: max-content !important;
+}
+
+.list-pagination {
+  display: flex;
+  justify-content: center;
 }

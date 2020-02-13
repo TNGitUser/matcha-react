@@ -1,13 +1,23 @@
 
-export const authLogin = (user_id) => {
+export const authLogin = (user_id, user_token) => {
     return {
         type : "AUTH_USER",
-        uid : user_id
+        payload : {
+            uid : user_id,
+            key : user_token
+        }
     }
 }
 
 export const authOut = (user_id) => {
     return {
         type : "AUTH_LOGOUT",
+    }
+}
+
+export const getProfile = (profiles) => {
+    return {
+        type : "SEED_PROFILES",
+        profiles
     }
 }

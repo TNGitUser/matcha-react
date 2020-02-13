@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import M from 'materialize-css';
 import { updateProfile } from '../../store/actions/profileActions';
+import Axios from 'axios';
 
 export class ProfileEdit extends Component {
     constructor(props) {
@@ -13,7 +14,6 @@ export class ProfileEdit extends Component {
     }
 
     handleChange = (e) => {
-        if (e.target.id === 'age' && e.target.value < 18) return ;
         this.setState({
             [e.target.id] : e.target.value
         });
@@ -22,17 +22,31 @@ export class ProfileEdit extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         console.log("It's mine !");
+        console.log(this.state.age);
+        if (this.state.age < 18 || this.state.age > 125) {
+            M.toast({html : "Merci de metter un âge entre 18 et 125 ans.", classes : "red"});
+            return ;
+        }
         let {profile, ...profile_update} = this.state; // this line is used to exclude profile field in the object we'll be disptaching
         console.log(profile_update);
         this.props.updateProfile(profile_update);
         console.log(this.props);
+        M.toast({html : "Profile mis à jour :)", classes : "green"});
     }
 
     componentDidMount = () => {
-        this.setState({
-            ...this.props.profile,
-            profile : this.props.profile
-        });
+        Axios.get("http://10.12.10.19:8080/api/my_account?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
+            if (response.data != null) {
+                if (response.data.status !== 1) {
+                    M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                } else {
+                    this.setState({
+                        ...response.data.success,
+                        profile : response.data.success
+                    });
+                }
+            }
+        }).catch(e => {console.log(e)})
     }
 
     componentDidUpdate() {
@@ -81,11 +95,11 @@ export class ProfileEdit extends Component {
         var homo, hetero, wants, sex, pictures = null;
 
         if (user_profile) {
-            
+            console.log(user_profile);
             sex = user_profile.gender;
             
-            homo = sex === "male" ? "fas fa-mars-double" : "fas fa-venus-double";
-            hetero = sex === "male" ? "fas fa-venus" : "fas fa-mars";
+            homo = sex === "Male" ? "fas fa-mars-double" : "fas fa-venus-double";
+            hetero = sex === "Male" ? "fas fa-venus" : "fas fa-mars";
             
             wants = user_profile.orientation === "Bisexual" ? "fas fa-venus-mars" : user_profile.orientation === "Hétérosexuel" ? hetero : homo;
             wants += " sweet_pink";
@@ -156,7 +170,8 @@ export class ProfileEdit extends Component {
                             <div className="chips chips-autocomplete"></div>
                         </div>
                         <div className="row profile-tags">
-                            { user_profile.tags.length ? this.state.tags.map((tag, index) => {
+                            { user_profile.tags.length ?
+                            this.state.tags.map((tag, index) => {
                                 return (
                                     <div className="chip" key={index}>
                                         {tag}
@@ -184,11 +199,9 @@ export class ProfileEdit extends Component {
 }
 
 const mapStateToProps = (state) => {
-    var id = 5;
-    let myprofile = state.profiles.filter(profile => profile.login === id);
+    //let myprofile = state.profiles.filter(profile => profile.login === state.auth);
     return {
-        ...state,
-        profile : myprofile[0]
+        ...state
     }
 }
 

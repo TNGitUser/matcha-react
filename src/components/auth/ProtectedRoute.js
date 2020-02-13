@@ -10,7 +10,7 @@ class ProtectedRoute extends Component {
         <Route 
           {...props} 
           render={props => (
-            this.props.auth != null ?
+            this.props.auth.id !== -1 && this.props.auth.key !== null ?
               <Component {...props} /> :
               <Redirect to='/signin' />
           )}

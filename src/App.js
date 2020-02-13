@@ -6,15 +6,14 @@ import Dashboard from './components/dashboard/Dashboard';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import ProfileList from './components/profile/ProfileList';
-import ProfileEdit from './components/profile/ProfileEdit';
-//import ProtectedRoute from './components/auth/ProtectedRoute';
+import ProfileEdit from './components/profile/ProfileEdit'; 
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 /*
-
-              <ProtectedRoute path="/profiles/:user_id" component={Profile} />
-              <ProtectedRoute path="/profiles-list" component={ProfileList} />
-              <ProtectedRoute path="/match" component={ProfileList} />
-              */
+<ProtectedRoute path="/profiles/:user_id" component={Profile} />
+<ProtectedRoute path="/profiles-list" component={ProfileList} />
+<ProtectedRoute path="/match" component={ProfileList} />
+*/
 
 class App extends Component {
   render() {
@@ -24,12 +23,17 @@ class App extends Component {
           <Navbar />
           <Switch>
             <Route exact path="/" component={Dashboard} />
-            <Route path="/profiles/:user_id" component={Profile} />
+            <ProtectedRoute path="/profiles/:user_id" component={Profile} />
+            <ProtectedRoute path="/profiles-list" component={ProfileList} />
+            <ProtectedRoute path="/profile-edit" component={ProfileEdit} />
+            <ProtectedRoute path="/match" component={ProfileList} />
+            {/* <Route path="/profiles/:user_id" component={Profile} />
             <Route path="/profiles-list" component={ProfileList} />
             <Route path="/profile-edit" component={ProfileEdit} />
-            <Route path="/match" component={ProfileList} />
+            <Route path="/match" component={ProfileList} /> */}
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
+            <Route path="/:token" component={Dashboard} />
           </Switch>
         </div>
       </BrowserRouter>
