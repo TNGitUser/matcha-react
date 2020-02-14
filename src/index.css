@@ -289,3 +289,70 @@ code {
   display: flex;
   justify-content: center;
 }
+
+.sort-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+.sort-options-fieldset {
+  /* border-color: #96dbfa; */
+  border-color: rgba(150, 219, 250, 0.3);
+}
+
+.sort-options .fa-level-up-alt, .fa-level-down-alt {
+  cursor: pointer;
+}
+
+.private-info {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.private-item {
+  margin: 5px 10px;
+}
+
+.private-pass {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.naming-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.naming-info input{
+  margin : 5px 10px;
+}
+
+.basic-info {
+  margin-left : 0px !important;
+}
+
+.online-badge {
+  background-color: #00FF00;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 3%;
+  left: 5%;
+  z-index: 100;
+  border-radius: 50%;
+}

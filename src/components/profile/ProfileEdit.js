@@ -9,29 +9,89 @@ export class ProfileEdit extends Component {
         super(props);
 
         this.state = {
-            profile : null
+            profile : null,
+            new_password : null,
+            nv_password : null
         };
     }
 
     handleChange = (e) => {
+        if (e.target.id === "bio" || e.target.id === "firstname" || e.target.id === "lastname") {
+            let test_arr = ['< ', ' >', ';', '<script>', '</script>'];
+            let flag = false;
+            for (let i = 0; i < test_arr.length; i++) {
+                if (e.target.value.includes(test_arr[i])) {
+                    M.toast({html : "'" + e.target.value[e.target.value.length - 1] + "' n'est pas un caractère accepté pour des raisons de sécurité (Balises scripts interdites).", classes : "red"});
+                    flag = true;
+                    break ;
+                }
+            }
+            if (flag) return ;
+        }
         this.setState({
             [e.target.id] : e.target.value
         });
     }
 
+    getModifications = () => {
+        let fields = ['firstname', 'lastname', ,'birth', 'age', 'gender', 'orientation', 'bio', 'tags', 'city', 'arr'];
+        let profile_update = {};
+
+        fields.forEach((value, index) => {
+            if (this.state[value] !== this.state.profile[value]) {
+                profile_update = {
+                    ...profile_update,
+                    [value] : this.state[value]
+                }
+            }
+        });
+        if (this.state.new_password != null) {
+            profile_update = {
+                ...profile_update,
+                password : this.state.new_password
+            }
+        }
+        profile_update = {
+            ...profile_update,
+            email : this.state.email
+        }
+        return profile_update;
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log("It's mine !");
-        console.log(this.state.age);
         if (this.state.age < 18 || this.state.age > 125) {
-            M.toast({html : "Merci de metter un âge entre 18 et 125 ans.", classes : "red"});
+            M.toast({html : "Merci de mettre un âge entre 18 et 125 ans.", classes : "red"});
             return ;
         }
-        let {profile, ...profile_update} = this.state; // this line is used to exclude profile field in the object we'll be disptaching
+        console.log(this.state.new_password);
+        console.log(this.state.nv_password);
+        if (this.state.new_password !== this.state.nv_password) {
+            M.toast({html : "Les nouveaux mot de passe ne correspondent pas.", classes : "red"});
+            return ;
+        }
+        if (this.state.email === null || this.state.email.length === 0) {
+            M.toast({html : "Il vous faut un email valide !", classes : "red"});
+            return ;
+        }
+        let {profile, password, new_password, nv_password, login, ...profile_update} = this.state; // this line is used to exclude profile field in the object we'll be disptaching
+        profile_update = this.getModifications();
         console.log(profile_update);
-        this.props.updateProfile(profile_update);
+        //this.props.updateProfile(profile_update);
+        Axios.post("http://10.12.10.19:8080/api/account_editor", {
+            id : this.props.auth.uid,
+            token : this.props.auth.key,
+            ...profile_update
+        }).then(response => {
+            let data = response.data;
+            let status = data.status;
+            if (status === 0) {
+                M.toast({html : data.error, classes : "red"});
+            } else {
+                M.toast({html : "Profile mis à jour :)", classes : "green"});
+            }
+        }).catch(e => {console.log(e)})
         console.log(this.props);
-        M.toast({html : "Profile mis à jour :)", classes : "green"});
     }
 
     componentDidMount = () => {
@@ -95,7 +155,6 @@ export class ProfileEdit extends Component {
         var homo, hetero, wants, sex, pictures = null;
 
         if (user_profile) {
-            console.log(user_profile);
             sex = user_profile.gender;
             
             homo = sex === "Male" ? "fas fa-mars-double" : "fas fa-venus-double";
@@ -122,14 +181,40 @@ export class ProfileEdit extends Component {
                     <button className="btn waves-effect waves-light green save-btn" type="submit" name="save">Enregistrer
                         <i className="material-icons right">save</i>
                     </button>
+                    <div className="private-info">
+                        <div className="private-pass">
+                            <div className="input-field col s12 private-item">
+                                <input id="new_password" type="password" className="validate" onChange={this.handleChange}/>
+                                <label htmlFor="new_password">Nouveau mot de passe</label>
+                            </div>
+                            <div className="input-field col s12 private-item">
+                                <input id="nv_password" type="password" className="validate" onChange={this.handleChange}/>
+                                <label htmlFor="nv_password">Vérification</label>
+                            </div>
+                        </div>
+                        <div className="private-email">
+                            <div className="input-field col s12 private-item">
+                                <input id="email" type="email" className="validate" value={this.state.email} onChange={this.handleChange}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="divider center"></div>
                     <div className="row top-info">
                         <div className="col">
                             <div className="row s4 center fullprofile-holder"><img src={user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
                             <div className="actions">
                             </div>
                         </div>
-                        <div className="col s8 m6">
-                            <h4 className="center">{user_profile.firstname} {user_profile.lastname}</h4>
+                        <div className="col s10 m6 basic-info">
+                            <div className="naming-info">
+                            <div className="input-field col s12 private-item">
+                                <input id="firstname" type="text" className="validate" value={this.state.firstname} onChange={this.handleChange}/>
+                            </div>
+                            <div className="input-field col s12 private-item">
+                                <input id="lastname" type="text" className="validate" value={this.state.lastname} onChange={this.handleChange}/>
+                            </div>
+                            </div>
+                            {/* <h4 className="center">{user_profile.firstname} {user_profile.lastname}</h4> */}
                             <div className="divider center"></div>
                             <h5 className="center">Biographie</h5>
                             <textarea id="bio" className="materialize-textarea" value={this.state.bio} onChange={this.handleChange}></textarea>

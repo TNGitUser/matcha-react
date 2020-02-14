@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import M from 'materialize-css';
 import Axios from 'axios';
+import Score from './Score';
 
 export class Profile extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ export class Profile extends Component {
         M.Carousel.init(elems);
     }
 
-    componentDidUpdate() {
+    componentDidMount() {
         let carousel = document.querySelector('.carousel');
         M.Carousel.init(carousel, {indicators:true, fullWidth:false, dist:0});
     }
@@ -80,13 +81,13 @@ export class Profile extends Component {
                             <a href="#!" className="btn-floating btn-large disabled">
                                 <i className="material-icons">message</i>
                             </a>
-                            <a href="#!" className="btn-floating btn-large red">
-                                <i className="material-icons">close</i>
+                            <a href="#!" className="btn-floating btn-large yellow darken-3">
+                                <i className="material-icons">warning</i>
                             </a>
                         </div>
                     </div>
                     <div className="col s8 m6">
-                        <h4 className="center">{user_profile.firstname} {user_profile.lastname}</h4>
+                        <h4 className="center">{user_profile.firstname} {user_profile.lastname} <Score score={user_profile.score}/></h4>
                         <div className="divider center"></div>
                         <h5 className="center">Biographie</h5>
                         <p>{user_profile.bio}</p>
@@ -94,7 +95,7 @@ export class Profile extends Component {
                 </div>
                 <div className="divider center"></div>
                 <div className="row main-info">
-                    <div className="col s4 center profile-info"><i className="fas fa-map-marker-alt"></i> {user_profile.city}{ arr } </div>
+                    <div className="col s4 center profile-info"><i className="fas fa-map-marker-alt"></i> {user_profile.city}{ arr } - {user_profile.dst} Kms</div>
                     <div className="col s4 center profile-info"><i className="fas fa-birthday-cake"></i> {user_profile.age} ans</div>
                     <div className="col s4 center profile-info"><i className={wants}></i> {user_profile.orientation} </div>
                 </div>

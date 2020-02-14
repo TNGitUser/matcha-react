@@ -33,6 +33,7 @@ export class ProfilePeek extends Component {
         const liked_icon_style = this.state.liked ? "icon-liked" : "";
         return (
             <div className="col card profilePeek">
+                <div className={this.state.log ? "online-badge" : "online-badge red"}></div>
                 <div className="profile-image activator" onClick={() => { this.props.history.push('/profiles/' + this.state.login) }}>
                     <img src={this.state.profilePic} alt="" className="activator"/>
                 </div>

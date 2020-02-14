@@ -8,6 +8,7 @@ import SignIn from './components/auth/SignIn';
 import ProfileList from './components/profile/ProfileList';
 import ProfileEdit from './components/profile/ProfileEdit'; 
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import MatchList from './components/profile/MatchList';
 
 /*
 <ProtectedRoute path="/profiles/:user_id" component={Profile} />
@@ -26,14 +27,14 @@ class App extends Component {
             <ProtectedRoute path="/profiles/:user_id" component={Profile} />
             <ProtectedRoute path="/profiles-list" component={ProfileList} />
             <ProtectedRoute path="/profile-edit" component={ProfileEdit} />
-            <ProtectedRoute path="/match" component={ProfileList} />
+            <ProtectedRoute path="/lucky" component={MatchList} />
             {/* <Route path="/profiles/:user_id" component={Profile} />
             <Route path="/profiles-list" component={ProfileList} />
             <Route path="/profile-edit" component={ProfileEdit} />
             <Route path="/match" component={ProfileList} /> */}
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
-            <Route path="/:token" component={Dashboard} />
+            <Route path="/act/:token" component={Dashboard} />
           </Switch>
         </div>
       </BrowserRouter>

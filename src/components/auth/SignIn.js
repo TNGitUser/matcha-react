@@ -43,7 +43,7 @@ export class SignIn extends Component {
                 let token = log_status.token;
                 this.props.authUser(user, token);
                 this.props.history.push("/");
-                this.askForList(user, token);
+                //this.askForList(user, token);
             } else {
                 if (log_status.error === "email") {
                     var mail_input = document.getElementById("email");
