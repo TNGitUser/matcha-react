@@ -27,8 +27,10 @@ export class SignIn extends Component {
                 this.props.populateProfiles(profiles_get.success);
                 }
             }
-        }).catch(err => {
-            console.log(err);
+        }).catch(function(err) {
+            M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+            M.toast({html : err.response, classes: "red"});
+            console.log(err.response);
         })
     }
 
