@@ -34,7 +34,7 @@ export class ProfileEdit extends Component {
     }
 
     getModifications = () => {
-        let fields = ['firstname', 'lastname', ,'birth', 'age', 'gender', 'orientation', 'bio', 'tags', 'city', 'arr'];
+        let fields = ['firstname', 'lastname', 'birth', 'age', 'gender', 'orientation', 'bio', 'tags', 'city', 'arr'];
         let profile_update = {};
 
         fields.forEach((value, index) => {
