@@ -22,7 +22,7 @@ export class ProfileEdit extends Component {
             display_date : null,
             new_password : null,
             nv_password : null,
-            places : []
+            places : ["Paris"]
         };
     }
 
@@ -127,6 +127,33 @@ export class ProfileEdit extends Component {
             document.querySelector(".check-pos").classList.add("fa-times");
             document.querySelector(".check-pos").classList.add("red-text");
         }
+        this.setState({
+            city : e.target.value
+        })
+    }
+
+    uploadImage = (e) => {
+        const formData = new FormData()
+
+        var imagefile = document.querySelector('#supp_pic');
+        console.log(imagefile);
+        formData.append("Supp_pic", imagefile.files[0]);
+        console.log(imagefile.files[0]);
+
+        Axios({
+            method: 'post',
+            url: 'http://10.12.10.19:8080/api/images?id=' + this.props.auth.uid + "&token=" + this.props.auth.key,
+            data: formData,
+            headers: {'content-type': 'undefined' }
+            })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });           
     }
 
     componentDidMount = () => {
@@ -160,7 +187,7 @@ export class ProfileEdit extends Component {
         this.props.tags.map(tag => {
             return autocomplete_city[tag] = null;
         })
-        M.Autocomplete.init(Position, { data : {banana : null}});
+        M.Autocomplete.init(Position, { data : {Paris : null}});
 
 
         let tags = document.querySelectorAll('.chips');
@@ -220,8 +247,9 @@ export class ProfileEdit extends Component {
                 <div className="carousel">
                 <h5 className="center">Petit aperçu de moi ;)</h5>
                     {user_profile.images.map((image, index) => {
+                        console.log(image);
                         return (// eslint-disable-next-line
-                            <a key={index} className="carousel-item images"><img src={image} alt="Some stuff"/></a>
+                            <a key={index} className="carousel-item images"><img src={"http://10.12.10.19:8080" + image['link']} alt="Some stuff"/></a>
                         )
                     })}
                 </div>
@@ -301,8 +329,8 @@ export class ProfileEdit extends Component {
                         {pictures}
                         <div className="file-field input-field">
                             <div className="btn">
-                                <span>Image</span>
-                                <input type="file" />
+                                <span>Ajouter image</span>
+                                <input id="supp_pic" type="file" onChange={this.uploadImage}/>
                             </div>
                             <div className="file-path-wrapper">
                                 <input className="file-path validate" type="text" />
