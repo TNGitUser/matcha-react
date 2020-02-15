@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom';
+import Axios from 'axios';
+import M from 'materialize-css';
 
 export class ProfilePeek extends Component {
     state = {}
@@ -23,30 +25,54 @@ export class ProfilePeek extends Component {
     }
 
     handleLike = (e) => {
-        this.setState({
-            liked : !(this.state.liked)
-        });
+        Axios.post("http://10.12.10.19:8080/api/like", {
+            id : this.props.auth.uid,
+            token : this.props.auth.key,
+            login : this.state.login
+        }).then(response => {
+            let status = response.data.status;
+            if (status === 0)
+            {
+                M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+            } else {
+                let like = response.data.success;
+                this.setState({
+                    myLikeTo : like === "liked" ? true : false,
+                    match : like === "MATCH" ? true : false
+                })
+            }
+        })
+    }
+
+    redirect = (e, login) => {
+        if (e.nativeEvent.button === 1 || e.nativeEvent.button === 0) {
+            if (e.nativeEvent.button === 1) {
+                window.open("/profiles/" + login, "_blank");
+            } else {
+                this.props.history.push("/profiles/" + login);
+            }
+          }
     }
 
     render() {
-        const liked_style = this.state.liked ? "liked" : "unliked";
-        const liked_icon_style = this.state.liked ? "icon-liked" : "";
+        const liked_style = this.state.match ? "matched" : this.state.myLikeTo ? "liked" : this.state.likedBy ? "likedBy" : "unliked";
+        const liked_icon_style = this.state.match ? "matched" : this.state.myLikeTo ? "icon-liked" : this.state.likedBy ? "likedBy" : "";
         return (
             <div className="col card profilePeek">
                 <div className={this.state.log ? "online-badge" : "online-badge red"}></div>
-                <div className="profile-image activator" onClick={() => { this.props.history.push('/profiles/' + this.state.login) }}>
+                <div className="profile-image activator" onMouseDown={(e) => {this.redirect(e, this.state.login)}}>
                     <img src={this.state.profilePic} alt="" className="activator"/>
                 </div>
                 <div className="profilePeekActions">
                     <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
-                        <i className={"fa fa-heart " + liked_icon_style} aria-hidden="true"></i>
+                        <i className={"fa" + (this.state.match ? " fa-star " : this.state.likedBy ? " fa-question " : " fa-heart ") + liked_icon_style} aria-hidden="true"></i>
                     </a>
-                    <a href="#!" className="btn-floating btn-large disabled">
+                    <a href="#!" className={ this.state.match ? "btn-floating btn-large" : "btn-floating btn-large disabled" }>
                         <i className="material-icons">message</i>
                     </a>
                 </div>
                 <div className="card-content">
-                    <span className="card-title activator grey-text center" onClick={() => { this.props.history.push('/profiles/' + this.state.profile_id) }}>{ this.state.firstname }</span>
+                    <span className="card-title activator grey-text center"  onMouseDown={(e) => {this.redirect(e, this.state.login)}}>{ this.state.firstname }</span>
                     <p className="pink-text center">{this.state.age} ans - {this.state.city}</p>
                 </div>
             </div>

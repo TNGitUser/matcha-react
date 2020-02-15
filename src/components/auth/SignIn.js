@@ -44,7 +44,7 @@ export class SignIn extends Component {
                 user = log_status.id;
                 let token = log_status.token;
                 this.props.authUser(user, token);
-                this.props.history.push("/");
+                this.props.history.push("/lucky");
                 //this.askForList(user, token);
             } else {
                 if (log_status.error === "email") {

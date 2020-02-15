@@ -47,7 +47,7 @@ class ProfileList extends Component {
         dst : {
           lowerBound: 0,
           upperBound: 100,
-          value: [0, 100],
+          value: [0, 20],
         },
         page : 1,
         max_page,
@@ -80,6 +80,10 @@ class ProfileList extends Component {
                         filter : {
                           ...this.state.filter,
                           value : interval
+                        },
+                        pop : {
+                          ...this.state.pop,
+                          value : [this.state.profile.score - 10, 100]
                         }
                       })
                     });
@@ -211,7 +215,7 @@ class ProfileList extends Component {
           let profiles_get = response.data;
           if (profiles_get) {
               if (profiles_get.status !== 1) {
-                  M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                  M.toast({html : profiles_get.error, classes: "red"});
               } else {
                 this.props.populateProfiles(profiles_get.success);
                 this.setOutput();
@@ -291,7 +295,7 @@ class ProfileList extends Component {
                 <div className="row profile-row s8 m8">
                   { this.state.filtered_profiles && this.state.filtered_profiles.map((profile, index) => {
                     if (index >= (this.state.page - 1) * this.state.epp && index < (this.state.page) * this.state.epp) {
-                      return <ProfilePeek profile={profile} key={profile.login}/>
+                      return <ProfilePeek profile={profile} key={profile.login} auth={this.props.auth}/>
                     } else return null;
                   })}
                 </div>

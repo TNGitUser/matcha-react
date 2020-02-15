@@ -3,6 +3,15 @@ import { connect } from 'react-redux'
 import M from 'materialize-css';
 import { updateProfile } from '../../store/actions/profileActions';
 import Axios from 'axios';
+import 'react-datepicker/src/stylesheets/datepicker.scss';
+import { format, subYears } from 'date-fns';
+import fr from 'date-fns/locale/fr';
+import DatePicker, { registerLocale } from "react-datepicker";
+registerLocale("fr", fr); // register it with the name you want
+
+function getChipDeleted(e, data) {
+    return (data.childNodes[0].textContent);
+}
 
 export class ProfileEdit extends Component {
     constructor(props) {
@@ -10,8 +19,10 @@ export class ProfileEdit extends Component {
 
         this.state = {
             profile : null,
+            display_date : null,
             new_password : null,
-            nv_password : null
+            nv_password : null,
+            places : []
         };
     }
 
@@ -55,18 +66,27 @@ export class ProfileEdit extends Component {
             ...profile_update,
             email : this.state.email
         }
-        console.log(profile_update);
         return profile_update;
+    }
+
+    handleDate = (date) => {
+        let birthday = format(date, 'dd/MM/yyyy');
+        this.setState({
+            birth : birthday,
+            display_date : date
+        });
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        if (this.state.age < 18 || this.state.age > 125) {
+
+        let today = new Date();
+        let birth = Date.parse(this.state.birth);
+        
+        if (/*this.state.age < 18 || this.state.age > 125 || */subYears(today, 18).getTime() < birth || subYears(today, 125).getTime() > birth) {
             M.toast({html : "Merci de mettre un âge entre 18 et 125 ans.", classes : "red"});
             return ;
         }
-        console.log(this.state.new_password);
-        console.log(this.state.nv_password);
         if (this.state.new_password !== this.state.nv_password) {
             M.toast({html : "Les nouveaux mot de passe ne correspondent pas.", classes : "red"});
             return ;
@@ -77,7 +97,7 @@ export class ProfileEdit extends Component {
         }
         let {profile, password, new_password, nv_password, login, ...profile_update} = this.state; // this line is used to exclude profile field in the object we'll be disptaching
         profile_update = this.getModifications();
-        console.log(profile_update);
+        // console.log(profile_update);
         //this.props.updateProfile(profile_update);
         Axios.post("http://10.12.10.19:8080/api/account_editor", {
             id : this.props.auth.uid,
@@ -92,7 +112,21 @@ export class ProfileEdit extends Component {
                 M.toast({html : "Profile mis à jour :)", classes : "green"});
             }
         }).catch(e => {console.log(e)})
-        console.log(this.props);
+    }
+
+    handlePositionChange = (e) => {
+        console.log(e.target.value);
+        if (this.state.places.includes(e.target.value)) {
+            document.querySelector(".check-pos").classList.remove("fa-times");
+            document.querySelector(".check-pos").classList.remove("red-text");
+            document.querySelector(".check-pos").classList.add("fa-check");
+            document.querySelector(".check-pos").classList.add("green-text");
+        } else {
+            document.querySelector(".check-pos").classList.remove("fa-check");
+            document.querySelector(".check-pos").classList.remove("green-text");
+            document.querySelector(".check-pos").classList.add("fa-times");
+            document.querySelector(".check-pos").classList.add("red-text");
+        }
     }
 
     componentDidMount = () => {
@@ -103,11 +137,12 @@ export class ProfileEdit extends Component {
                 } else {
                     this.setState({
                         ...response.data.success,
+                        display_date : Date.parse(response.data.success.birth),
                         profile : response.data.success
                     });
                 }
             }
-        }).catch(e => {console.log(e)})
+        }).catch(e => {console.log(e)});
     }
 
     componentDidUpdate() {
@@ -119,6 +154,14 @@ export class ProfileEdit extends Component {
 
         let selects = document.querySelectorAll('select');
         M.FormSelect.init(selects);
+
+        var Position = document.querySelectorAll('.autocomplete');
+        let autocomplete_city = {};
+        this.props.tags.map(tag => {
+            return autocomplete_city[tag] = null;
+        })
+        M.Autocomplete.init(Position, { data : {banana : null}});
+
 
         let tags = document.querySelectorAll('.chips');
         let autocomplete_data = {};
@@ -146,10 +189,17 @@ export class ProfileEdit extends Component {
                     console.log("must update database !");
                     M.toast({html : "Must update the database ! Go and contact Jmondino !"});
                 }
+            },
+            onChipDelete : (e, data) => {
+                let tag = getChipDeleted(e, data);
+                console.log("Deleted tag : " + tag);
+                if (tag) {
+                  this.setState({
+                    tags : this.state.tags.filter(ftag => { return ftag !== tag })
+                  })
+                }
             }
         });
-
-        console.log(this.state);
     }
 
     render() {
@@ -226,8 +276,15 @@ export class ProfileEdit extends Component {
                     </div>
                     <div className="divider center"></div>
                     <div className="row main-info">
-                        <div className="col s4 center profile-info"><i className="fas fa-map-marker-alt"></i> {user_profile.city} </div>
-                        <div className="col s4 center profile-info"><i className="fas fa-birthday-cake"></i> <input type="number" id="age" value={this.state.age} onChange={this.handleChange}/>ans</div>
+                        <div className="col s4 center profile-info input-field pos-field">
+                            <i className="fas fa-map-marker-alt prefix"></i>
+                            <input type="text" id="autocomplete-input" className="autocomplete" value={this.state.city} onChange={this.handlePositionChange}/>
+                            <i className="fas fa-check green-text check-pos"></i>
+                        </div>
+                        <div className="col s4 center profile-info"><i className="fas fa-birthday-cake"></i>&nbsp;
+                            <DatePicker id="birthday" dateFormat="dd/MM/yyyy" selected={this.state.display_date} onChange={this.handleDate} locale="fr" autoComplete="off"
+                            /*maxDate={subYears(new Date(), 18)} minDate={subYears(new Date(), 125)}*//>
+                        </div>
                         <div className="col s4 center profile-info"><i className={wants}></i>
                             <div className="input-field col s12">
                                 <select defaultValue={this.state.orientation} id="orientation" onChange={this.handleChange}>
@@ -263,7 +320,9 @@ export class ProfileEdit extends Component {
                                 return (
                                     <div className="chip" key={index}>
                                         {tag}
-                                        <i className="material-icons close">close</i>
+                                        <i className="material-icons close" onClick={() => {this.setState({
+                                            tags : this.state.tags.filter(ftag => { return ftag !== tag })
+                                        })}}>close</i>
                                     </div>
                                 )
                             }) : <div className="red-text">No tags</div> }
@@ -271,7 +330,7 @@ export class ProfileEdit extends Component {
                     </div>
                 </form>
             </div>
-        )) : (  <div className="preloader-wrapper active center-loader">
+        )) : (  <div className="center-loader"><div className="preloader-wrapper active">
                     <div className="spinner-layer spinner-red-only">
                     <div className="circle-clipper left">
                         <div className="circle"></div>
@@ -281,7 +340,7 @@ export class ProfileEdit extends Component {
                         <div className="circle"></div>
                     </div>
                     </div>
-                </div>) ;
+                </div></div>    ) ;
         return page;
     }
 }

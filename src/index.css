@@ -193,6 +193,14 @@ code {
   background-color : #ffffff !important;
 }
 
+.matched {
+  background-color : #ffc305 !important;
+}
+
+.likedBy {
+  background-color : #900c3f !important;
+}
+
 .icon-unliked {
   color : white;
 }
@@ -484,4 +492,37 @@ code {
   padding-left : 100px !important;
   cursor: pointer;
   margin: 10px 0;
+}
+
+.null-content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  margin-left: -100px;
+}
+
+.historic-page {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.pos-field {
+  position: relative;
+}
+
+.check-pos {
+  position: absolute;
+  height: 100%;
+  bottom : 50%;
+  right : 0;
+  top : 30%;
+}
+
+.center-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

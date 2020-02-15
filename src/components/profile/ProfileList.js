@@ -265,7 +265,7 @@ class ProfileList extends Component {
                 <div className="row profile-row s8 m8">
                   { this.state.filtered_profiles && this.state.filtered_profiles.map((profile, index) => {
                     if (index >= (this.state.page - 1) * this.state.epp && index < (this.state.page) * this.state.epp) {
-                      return <ProfilePeek profile={profile} key={profile.login}/>
+                      return <ProfilePeek profile={profile} key={profile.login} auth={this.props.auth}/>
                     } else return null;
                   })}
                 </div>

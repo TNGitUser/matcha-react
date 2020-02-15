@@ -14,7 +14,7 @@ class UserView extends Component {
 
     render() {
         return (
-            <li className="collection-item avatar" key={ this.state.login } onClick={this.props.redirect}>
+            <li className="collection-item avatar" key={ this.state.login } onMouseDown={this.props.redirect}>
                 <img src={ this.state.profilePic } alt="Profile visual" className="circle"/>
                 <span className="title">{ this.state.firstname } { this.state.lastname }</span>
                 <p>{this.state.age} ans<br/> {this.state.city}</p>
@@ -31,7 +31,8 @@ class Historic extends Component {
 
         this.state = {
             historicDay : null,
-            historicWeek : null
+            historicWeek : null,
+            historicLike : null
         }
     }
 
@@ -47,28 +48,71 @@ class Historic extends Component {
             }
             this.setState({
                 historicDay : response.data.success.historicDay,
-                historicWeek : response.data.success.historicWeek
+                historicWeek : response.data.success.historicWeek,
+                historicLike : response.data.success.historicLike,
             }, () => {console.log(this.state)});
         });
-    }   
+    } 
+
+    redirect = (e, login) => {
+        if (e.nativeEvent.button === 1 || e.nativeEvent.button === 0) {
+            if (e.nativeEvent.button === 1) {
+                window.open("/profiles/" + login, "_blank");
+            } else {
+                this.props.history.push("/profiles/" + login);
+            }
+          }
+    }
 
     render() {
         return (
             <div className="historic-page container">
-                <div className="historic-day">
-                    <h3>Historique journalier</h3>
-                    <ul className="collection">
-                        { this.state.historicDay !== null && this.state.historicDay.map((user_view, index) => {
-                            return <UserView user={user_view} redirect={() => {this.props.history.push("/profiles/" + user_view.login)}} key={index}/>
-                        })}
-                    </ul>
-                </div>
-                <div className="historic week">
-                    <h3>Historique hebdomadaire</h3>
-                    <ul className="collection">
-                        { this.state.historicWeek !== null && this.state.historicWeek.map((user_view, index) => {
-                                return <UserView user={user_view} redirect={() => {this.props.history.push("/profiles/" + user_view.login)}}  key={index}/>
+                <div className="historic-views">
+                    <div className="historic-day">
+                        <h3>Vos admirateurs du jour</h3>
+                        <ul className="collection">
+                            { this.state.historicDay !== null && this.state.historicDay.map((user_view, index) => {
+                                return <UserView user={user_view} redirect={(e) => {this.redirect(e, user_view.login)}} key={index}/>
                             })}
+                            { (this.state.historicDay == null || this.state.historicDay.length === 0) ?
+                                <li className="collection-item avatar" key="emptyDay" onClick={() => { M.toast({ html : "Désolé, il n'y a vraiment personne..."})}}>
+                                    <span className="null-content"><i>C'est vide ici...</i></span>
+                                </li>
+                                :
+                                null
+                            }
+                        </ul>
+                    </div>
+                    <div className="historic week">
+                        <h3>Vos admirateurs de la semaine</h3>
+                        <ul className="collection">
+                            { this.state.historicWeek !== null && this.state.historicWeek.map((user_view, index) => {
+                                    return <UserView user={user_view} redirect={(e) => {this.redirect(e, user_view.login)}}  key={index}/>
+                                })}
+                            { (this.state.historicWeek == null || this.state.historicWeek.length === 0) ?
+                                <li className="collection-item avatar" key="emptyDay" onClick={() => { M.toast({ html : "Désolé, il n'y a vraiment personne..."})}}>
+                                    <span className="null-content"><i>C'est vide ici...</i></span>
+                                </li>
+                                :
+                                null
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="historic-like">
+                    <h3 className="pink-text"><i>Ils s'intéressent à vous</i></h3>
+                    <ul className="collection">
+                        { this.state.historicLike !== null && this.state.historicLike.map((user_view, index) => {
+                                return <UserView user={user_view} redirect={(e) => {this.redirect(e, user_view.login)}}  key={index}/>
+                            })}
+                        { (this.state.historicLike == null || this.state.historicLike.length === 0) ?
+                            <li className="collection-item avatar" key="emptyLike" onClick={() => { M.toast({ html : "Je suis certain d'avoir bien cherché ! Pourtant que de la poussière. Vos admirateurs sont-ils tous morts ?"})}}>
+                                <span className="null-content"><i>Casper le fantôme sans compte</i></span>
+                            </li>
+                            :
+                            null
+                        }
                     </ul>
                 </div>
             </div>
