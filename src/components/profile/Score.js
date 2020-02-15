@@ -17,7 +17,6 @@ class Score extends Component {
     }
 
     render() {
-        console.log(this.props);
         const output = this.colorScore(this.props.score ? this.props.score : -99999999);
         return (
             output

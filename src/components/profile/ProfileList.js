@@ -125,14 +125,14 @@ class ProfileList extends Component {
             value = value.replace("close", "");
             this.setState({
               filter_tags : [...this.state.filter_tags, value]
-            })
+            }, () => {this.setOutput();this.setOutput();});
         },
         onChipDelete : (e, data) => {
           let tag = getChipDeleted(e, data);
           if (tag) {
             this.setState({
               filter_tags : this.state.filter_tags.filter(ftag => { return ftag !== tag })
-            })
+            }, () => {this.setOutput();this.setOutput();})
           }
         }
       });
@@ -160,7 +160,7 @@ class ProfileList extends Component {
       if (this.props.profiles) {
         this.props.profiles.forEach((profile) => {
           if (profile.age >= this.state.filter.value[0] && profile.age <= this.state.filter.value[1] && hasTag(this.state.filter_tags, profile)
-            && profile.score >= this.state.pop.value[0] && profile.score <= this.state.pop.value[1]
+            && profile.score >= this.state.pop.value[0] && profile.score <= (this.state.pop.value[1] === 100 ? 101 : this.state.pop.value[1])
             && profile.dst >= this.state.dst.value[0] && profile.dst <= this.state.dst.value[1]) {
               // console.log(profile.age + " >= " + this.state.filter.value[0] + " && " + profile.age + " <= " + this.state.filter.value[1]);
               result = [...result, profile];

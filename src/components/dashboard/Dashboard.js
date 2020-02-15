@@ -23,17 +23,17 @@ class Dashboard extends Component {
                 console.log(e);
             })
         }
-        console.log(this.props);
     }
 
     render() {
         return (
-            <div className="home">
-                <div className="home-banner">
-                    <img src="img/meeting.jpg" alt="Meeting people is nice !"></img>
+            <div className="fullpage">
+                <div className="full-love">
+                    <img src="/img/ItCouldBeYou.jpg" className="full-love-img" alt="It could be you !"/>
+                    <h2 className="catch">Ça pourrait-être vous !</h2>
                 </div>
-                <div className="home-about">
-                    <h4 className="center title">Matcha'Soul</h4>
+                <div className="rest-for-mobile hide-on-med-and-up">
+                    ojpinobde
                 </div>
             </div>
         )

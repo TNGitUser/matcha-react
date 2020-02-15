@@ -5,8 +5,8 @@ import Slider from 'rc-slider';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 import { getProfile } from '../../store/actions/authActions';
-// import Pagination from 'rc-pagination';
-// import 'rc-pagination/assets/index.css';
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
 
 
 const Range = Slider.Range;
@@ -17,7 +17,7 @@ function getChipDeleted(e, data) {
 
 function hasTag(tags, profile) {
   let ok = false;
-  if (tags.length === 0) ok = true;
+  if (tags.length === 0) return true;
   tags.forEach(tag => {
     if (profile.tags.includes(tag)) {
       ok = true;
@@ -26,7 +26,7 @@ function hasTag(tags, profile) {
   return ok;
 }
 
-class MatchList extends Component {
+class ProfileList extends Component {
 
     constructor(props) {
       super(props);
@@ -54,44 +54,85 @@ class MatchList extends Component {
         epp : 20,
         tags : [],
         filter_tags : [],
-        sort_age : true,
-        sort_pop : false,
-        sort_dst : true,
-        sort_tsyn : true,
+        filtered_profiles : [],
+        sort_age : 0,
+        sort_pop : 0,
+        sort_dst : 0,
+        sort_tsyn : 0,
       };
+
+      this.onConstruct();
     }
+
+    onConstruct = () => {
+      Axios.get("http://10.12.10.19:8080/api/my_account?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
+            if (response.data != null) {
+                if (response.data.status !== 1) {
+                    M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                } else {
+                    this.setState({
+                      ...this.state,
+                      profile : response.data.success
+                    }, () => {
+                      let interval = [this.state.profile.age - 3, this.state.profile.age + 3];
+                      this.setState({
+                        ...this.state.profile,
+                        filter : {
+                          ...this.state.filter,
+                          value : interval
+                        }
+                      })
+                    });
+                }
+            }
+        }).catch(e => {console.log(e)})
+    }
+
     onSliderChange = (value) => {
       this.setState({
-        filter : { value },
-      });
-    }
-    onSliderPopChange = (value) => {
-      this.setState({
-        pop : { value },
+        filter : { ...this.state.filter, value },
+      }, () => {
+        this.setOutput();
+        this.setOutput();
       });
     }
     onSliderDstChange = (value) => {
       this.setState({
-        dst : { value },
+        dst : { ...this.state.dst, value },
+      }, () => {
+        this.setOutput();
+        this.setOutput();
+      });
+    }
+    onSliderPopChange = (value) => {
+      this.setState({
+        pop : { ...this.state.pop, value },
+      }, () => {
+        this.setOutput();
+        this.setOutput();
       });
     }
 
     onSortChange = (e) => {
       let elem = document.getElementById(e.target.id);
       let var_state = this.state[e.target.id];
-      elem.classList.remove(var_state ? "fa-level-up-alt" : "fa-level-down-alt");
-      elem.classList.add(var_state ? "fa-level-down-alt" : "fa-level-up-alt");
-      console.log("var_state : " + var_state);
+      if (var_state === 0) elem.classList.remove("fa-sort");
+      else if (var_state === 1) elem.classList.remove("fa-sort-up");
+      else if (var_state === 2) elem.classList.remove("fa-sort-down");
+      elem.classList.add(var_state === 0 ? "fa-sort-up" : var_state === 1 ? "fa-sort-down" : "fa-sort");
       this.setState({
-        [e.target.id] : var_state ? false : true
-      }, this.askForList());
+        [e.target.id] : var_state === 0 ? 1 : var_state === 1 ? 2 : 0
+      }, () => {
+        this.askForList();
+        this.askForList();
+      });
     }
 
-    // handlePageChange = (page) => {
-    //   this.setState({
-    //     page
-    //   })
-    // }
+    handlePageChange = (page) => {
+      this.setState({
+        page
+      })
+    }
   
     initTags = () => {
       let tags = document.querySelectorAll('.chips');
@@ -110,14 +151,14 @@ class MatchList extends Component {
             value = value.replace("close", "");
             this.setState({
               filter_tags : [...this.state.filter_tags, value]
-            })
+            }, () => {this.setOutput();this.setOutput();});
         },
         onChipDelete : (e, data) => {
           let tag = getChipDeleted(e, data);
           if (tag) {
             this.setState({
               filter_tags : this.state.filter_tags.filter(ftag => { return ftag !== tag })
-            })
+            }, () => {this.setOutput();this.setOutput();})
           }
         }
       });
@@ -131,15 +172,34 @@ class MatchList extends Component {
           } else {
             this.setState({
               tags
-            });
-            this.initTags();
+            }, () => {
+              this.initTags(); 
+            } );
           }
         }).catch(err => {
             console.log(err);
-      })
+      });
     }
 
-    askForList = (sortA, sortD, sortS, sortT) => {
+    setOutput = () => {
+      let result = [];
+      if (this.props.profiles) {
+        this.props.profiles.forEach((profile) => {
+          if (profile.age >= this.state.filter.value[0] && profile.age <= this.state.filter.value[1] && hasTag(this.state.filter_tags, profile)
+            && profile.score >= this.state.pop.value[0] && profile.score <= (this.state.pop.value[1] === 100 ? 101 : this.state.pop.value[1])
+            && profile.dst >= this.state.dst.value[0] && profile.dst <= this.state.dst.value[1]) {
+              // console.log(profile.age + " >= " + this.state.filter.value[0] + " && " + profile.age + " <= " + this.state.filter.value[1]);
+              result = [...result, profile];
+            }
+        })
+      }
+      this.setState({
+        filtered_profiles : result,
+        max_page : result ? Math.floor(result.length / 20) : 0
+      }, /*console.log(this.state.filtered_profiles)*/);
+    }
+
+    askForList = () => {
       Axios.post("http://10.12.10.19:8080/api/suggest_list", {
         "id" : this.props.auth.uid,
         "token" : this.props.auth.key,
@@ -149,13 +209,13 @@ class MatchList extends Component {
         "tsyn" : this.state.sort_tsyn
       }).then(response => {
           let profiles_get = response.data;
-          console.log(response);
           if (profiles_get) {
               if (profiles_get.status !== 1) {
                   M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
               } else {
                 this.props.populateProfiles(profiles_get.success);
-                console.log(this.props.profiles);
+                this.setOutput();
+                this.setOutput();
               }
           }
         }).catch(err => {
@@ -185,19 +245,19 @@ class MatchList extends Component {
                             <div className="row sort-options">
                               <div className="col s3">
                                   <label>Par age : </label>
-                                  <i id="sort_age" className="fas fa-level-up-alt fa-2x" alt="Croissant" onClick={this.onSortChange}></i>
+                                  <i id="sort_age" className="fas fa-sort" alt="Trie" onClick={this.onSortChange}></i>
                               </div>
                               <div className="col s3">
                                   <label>Par distance : </label>
-                                  <i id="sort_dst"  className="fas fa-level-up-alt fa-2x" alt="Croissant" onClick={this.onSortChange}></i>
+                                  <i id="sort_dst"  className="fas fa-sort" alt="Trie" onClick={this.onSortChange}></i>
                               </div>
                               <div className="col s3">
                                   <label>Par popularité : </label>
-                                  <i id="sort_pop"  className="fas fa-level-up-alt fa-2x" alt="Croissant" onClick={this.onSortChange}></i>
+                                  <i id="sort_pop"  className="fas fa-sort" alt="Trie" onClick={this.onSortChange}></i>
                               </div>
                               <div className="col s3">
                                   <label>Par synergie de tags : </label>
-                                  <i id="sort_tsyn" className="fas fa-level-up-alt fa-2x" alt="Croissant" onClick={this.onSortChange}></i>
+                                  <i id="sort_tsyn" className="fas fa-sort" alt="Trie" onClick={this.onSortChange}></i>
                               </div>
                             </div>
                           </fieldset>
@@ -210,7 +270,7 @@ class MatchList extends Component {
                               </div>
                               <div className="col s4">
                                 <label>Distance : {this.state.dst.value[0]} - {this.state.dst.value[1]}</label>
-                                <Range allowCross={true} min={0} max={1250} value={this.state.dst.value} onChange={this.onSliderDstChange}/>
+                                <Range allowCross={true} min={0} max={250} value={this.state.dst.value} onChange={this.onSliderDstChange}/>
                               </div>
                               <div className="col s4">
                                 <label>Popularité : {this.state.pop.value[0]} - {this.state.pop.value[1]}</label>
@@ -229,14 +289,13 @@ class MatchList extends Component {
                 </ul>
                 </div>
                 <div className="row profile-row s8 m8">
-                  { this.props.profiles && this.props.profiles.map((profile, index) => {
-                    if (profile.age >= this.state.filter.value[0] && profile.age <= this.state.filter.value[1] && hasTag(this.state.filter_tags, profile)
-                    && profile.score >= this.state.pop.value[0] && profile.score <= this.state.pop.value[1]) {
+                  { this.state.filtered_profiles && this.state.filtered_profiles.map((profile, index) => {
+                    if (index >= (this.state.page - 1) * this.state.epp && index < (this.state.page) * this.state.epp) {
                       return <ProfilePeek profile={profile} key={profile.login}/>
                     } else return null;
                   })}
                 </div>
-                {/* <Pagination current={this.state.page} total={this.state.max_page} className="center list-pagination" onChange={this.handlePageChange}/> */}
+                <Pagination current={this.state.page} pageSize={this.state.epp} total={this.state.filtered_profiles.length} className="center list-pagination" onChange={this.handlePageChange}/>
             </div>
         )
     }
@@ -255,4 +314,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MatchList)
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileList)

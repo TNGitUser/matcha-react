@@ -41,11 +41,11 @@ export class ProfileEdit extends Component {
             if (this.state[value] !== this.state.profile[value]) {
                 profile_update = {
                     ...profile_update,
-                    [value] : this.state[value]
+                    [value === "tags" ? "interest" : value] : this.state[value]
                 }
             }
         });
-        if (this.state.new_password != null) {
+        if (this.state.new_password != null && this.state.new_password.length >= 4) {
             profile_update = {
                 ...profile_update,
                 password : this.state.new_password
@@ -55,6 +55,7 @@ export class ProfileEdit extends Component {
             ...profile_update,
             email : this.state.email
         }
+        console.log(profile_update);
         return profile_update;
     }
 
@@ -147,6 +148,8 @@ export class ProfileEdit extends Component {
                 }
             }
         });
+
+        console.log(this.state);
     }
 
     render() {

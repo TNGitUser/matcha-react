@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
+import ReactPasswordStrength from 'react-password-strength';
+
 
 export class SignUp extends Component {
     state = {
@@ -62,14 +64,16 @@ export class SignUp extends Component {
                             <label htmlFor="login">Login</label>
                             <input type="text" id="login" onChange={this.handleChange} className="validate"/>
                         </div>
-                        <div className="input-field">
-                            <label htmlFor="password">Password</label>
-                            <input type="password" id="password" onChange={this.handleChange} className="validate"/>
-                        </div>
-                        <div className="input-field">
-                            <label htmlFor="password-check">Password</label>
-                            <input type="password" id="password-check" onChange={this.handleChange} className="validate"/>
-                        </div>
+                        <ReactPasswordStrength className="input-field password-field" minLength={6} minScore={2}
+                            scoreWords={['Faible', 'Moyen', 'Suffisant', 'Fort', 'Compliqué']}
+                            tooShortWord={"Trop court"}
+                            changeCallback={(e) => {this.handlePassword(e, "password")}}
+                            inputProps={{ id: "password", name: "password", autoComplete: "off", placeholder: "Nouveau password"}}/>
+                        <ReactPasswordStrength className="input-field password-field" minLength={6} minScore={2}
+                            scoreWords={['Faible', 'Moyen', 'Suffisant', 'Fort', 'Compliqué']}
+                            tooShortWord={"Trop court"}
+                            changeCallback={(e) => {this.handlePassword(e, "vpassword")}}
+                            inputProps={{ id: "vpassword", name: "password", autoComplete: "off", placeholder: "Vérification"}}/>
                         <p>
                             <label>
                                 <input id="allow-geo" type="checkbox" className="filled-in" onChange={this.handleCheckBoxChange}/>

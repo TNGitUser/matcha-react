@@ -32,6 +32,60 @@ code {
   margin-left: 10px;
 }
 
+.full-love {
+  display: flex;
+  position: absolute;
+  overflow: hidden;
+  top : 0;
+  min-width: 100%;
+  max-width: 100%;
+  max-height: calc(100%);
+  z-index: 100;
+}
+
+.full-love-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center ;
+  /* object-fit: contain; */
+  /* max-height: 500px; */
+}
+
+.catch {
+  color : #e91e63 !important;
+  position: absolute;
+  font-style: italic;
+  top: 12%;
+  width: 100%;
+  text-align: center;
+}
+
+@media only screen and (max-width: 601px) {
+
+  .full-love {
+    display: flex;
+    position: absolute;
+    overflow: hidden;
+    top : 0%;
+    min-width: 100%;
+    max-width: 100%;
+    max-height: calc(100%);
+  }
+
+  .full-love-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+
+  .catch {
+    top: 0%;
+  }
+}
+
 .home-banner {
   min-height: 200px;
   max-height: 400px;
@@ -355,4 +409,79 @@ code {
   left: 5%;
   z-index: 100;
   border-radius: 50%;
+}
+
+.stepper-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.stepper {
+  width: 50%;
+  position: relative;
+  background-color: white;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex-wrap: nowrap;
+}
+
+.stepper-row ul {
+  padding-left: 15px;
+}
+
+.stepper .step {
+  padding: 20px;
+  position: relative;
+  margin-left: 0 !important;
+}
+
+.stepper-btn {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0%;
+  right: 2%;
+}
+
+.stepper-btn button {
+  margin: 5px 10px;
+  margin-bottom: -10px;
+}
+
+.password-field {
+  border: none !important;
+}
+
+
+@media only screen and (max-width: 601px) {
+  .stepper {
+    width: 100%;
+  }
+}
+
+.rest-for-mobile {
+  position: absolute;
+  bottom: 0;
+}
+
+.collection {
+  border : none !important;
+}
+
+.collection-item .circle {
+  width: 75px !important;
+  height: 75px !important;
+  top: 5px;
+  object-fit: cover;
+}
+
+.collection-item.avatar {
+  padding-left : 100px !important;
+  cursor: pointer;
+  margin: 10px 0;
 }

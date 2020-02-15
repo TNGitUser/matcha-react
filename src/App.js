@@ -9,6 +9,8 @@ import ProfileList from './components/profile/ProfileList';
 import ProfileEdit from './components/profile/ProfileEdit'; 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MatchList from './components/profile/MatchList';
+import ForgotPassword from './components/auth/ForgotPassword';
+import Historic from './components/hist/Historic';
 
 /*
 <ProtectedRoute path="/profiles/:user_id" component={Profile} />
@@ -24,10 +26,12 @@ class App extends Component {
           <Navbar />
           <Switch>
             <Route exact path="/" component={Dashboard} />
+            <Route exact path="/forgot-password" component={ForgotPassword} />
             <ProtectedRoute path="/profiles/:user_id" component={Profile} />
             <ProtectedRoute path="/profiles-list" component={ProfileList} />
             <ProtectedRoute path="/profile-edit" component={ProfileEdit} />
             <ProtectedRoute path="/lucky" component={MatchList} />
+            <ProtectedRoute exact path="/profile-admirer" component={Historic} />
             {/* <Route path="/profiles/:user_id" component={Profile} />
             <Route path="/profiles-list" component={ProfileList} />
             <Route path="/profile-edit" component={ProfileEdit} />
