@@ -18,7 +18,7 @@ export class SignIn extends Component {
     }
 
     askForList = (id, key) => {
-        Axios.get("//api/suggest_list?id=" + id + "&token=" + key).then(response => {
+        Axios.get("http://localhost:8080/api/suggest_list?id=" + id + "&token=" + key).then(response => {
             let profiles_get = response.data;
             if (profiles_get) {
                 if (profiles_get.status !== 1) {

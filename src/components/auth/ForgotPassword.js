@@ -137,7 +137,7 @@ class ForgotPassword extends Component {
 
         e.preventDefault();
         if (step === 1 ) {
-            Axios.post("//api/recovery_password", {
+            Axios.post("http://localhost:8080/api/recovery_password", {
                 step,
                 email: this.state.email
             }).then((response) => {
@@ -150,7 +150,7 @@ class ForgotPassword extends Component {
                 this.updateStep(status, step);
             });
         } else if (step === 2) {
-            Axios.post("//api/recovery_password", {
+            Axios.post("http://localhost:8080/api/recovery_password", {
                 step,
                 email: this.state.email,
                 token : this.state.token
@@ -174,7 +174,7 @@ class ForgotPassword extends Component {
                 M.toast({html : "Le mots de passe n'est pas assez fort", classes : "red"});
                 return ;
             }
-            Axios.post("//api/recovery_password", {
+            Axios.post("http://localhost:8080/api/recovery_password", {
                 step,
                 email: this.state.email,
                 token : this.state.token,

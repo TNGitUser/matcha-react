@@ -104,7 +104,7 @@ export class ProfileEdit extends Component {
         profile_update = this.getModifications();
         // console.log(profile_update);
         //this.props.updateProfile(profile_update);
-        Axios.post("http://10.12.10.19:8080/api/account_editor", {
+        Axios.post("http://localhost:8080/api/account_editor", {
             id : this.props.auth.uid,
             token : this.props.auth.key,
             ...profile_update
@@ -178,7 +178,7 @@ export class ProfileEdit extends Component {
 
         Axios({
             method: 'post',
-            url: 'http://10.12.10.19:8080/api/images?id=' + this.props.auth.uid + "&token=" + this.props.auth.key,
+            url: 'http://localhost:8080/api/images?id=' + this.props.auth.uid + "&token=" + this.props.auth.key,
             data: formData,
             headers: {'content-type': 'undefined' }
             })
@@ -191,7 +191,7 @@ export class ProfileEdit extends Component {
                 } else {
                     M.toast({ html: "Image de profile ajoutée.", classes : "green"});
                     console.log(response.data.success);
-                    document.getElementById("profil_pic_trigger").setAttribute("src", "http://10.12.10.19:8080/" + response.data.success);
+                    document.getElementById("profil_pic_trigger").setAttribute("src", "http://localhost:8080/" + response.data.success);
                 }
             })
             .catch(function (response) {
@@ -215,7 +215,7 @@ export class ProfileEdit extends Component {
 
         Axios({
             method: 'post',
-            url: 'http://10.12.10.19:8080/api/images?id=' + this.props.auth.uid + "&token=" + this.props.auth.key,
+            url: 'http://localhost:8080/api/images?id=' + this.props.auth.uid + "&token=" + this.props.auth.key,
             data: formData,
             headers: {'content-type': 'undefined' }
             })
@@ -236,7 +236,7 @@ export class ProfileEdit extends Component {
     }
 
     componentDidMount = () => {
-        Axios.get("http://10.12.10.19:8080/api/my_account?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
+        Axios.get("http://localhost:8080/api/my_account?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
             if (response.data != null) {
                 if (response.data.status !== 1) {
                     M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
@@ -253,7 +253,7 @@ export class ProfileEdit extends Component {
     }
 
     setCitiesList = () => {
-        Axios.get("http://10.12.10.19:8080/api/get_cities").then(response => {
+        Axios.get("http://localhost:8080/api/get_cities").then(response => {
             let cities = response.data;
             var Position = document.querySelectorAll('.autocomplete');
             var autocomplete_city = {};
@@ -318,7 +318,6 @@ export class ProfileEdit extends Component {
         const user_profile = this.state.profile;
         var homo, hetero, wants, sex, pictures = null;
 
-        console.log(user_profile);
         if (user_profile) {
             sex = user_profile.gender;
             
@@ -333,7 +332,7 @@ export class ProfileEdit extends Component {
                 <h5 className="center">Petit aperçu de moi ;)</h5>
                     {user_profile.images.map((image, index) => {
                         return (// eslint-disable-next-line
-                            <a key={index} className="carousel-item images"><img src={"http://10.12.10.19:8080/" + image['link']} alt="Some stuff"/></a>
+                            <a key={index} className="carousel-item images"><img src={"http://localhost:8080/" + image['link']} alt="Some stuff"/></a>
                         )
                     })}
                 </div>
@@ -367,7 +366,7 @@ export class ProfileEdit extends Component {
                     <div className="row top-info">
                         <div className="col">
                             <input id="profil_pic" type="file" onChange={this.uploadProfile} accept="image/*" ref={input => this.inputElement = input}/> 
-                            <div className="row s4 center fullprofile-holder"><img id="profil_pic_trigger" src={"http://10.12.10.19:8080/" + user_profile.profilePic} className="fullprofile-image center" alt="Principale" onClick={this.uploadProfileTrigger}/></div>
+                            <div className="row s4 center fullprofile-holder"><img id="profil_pic_trigger" src={"http://localhost:8080/" + user_profile.profilePic} className="fullprofile-image center" alt="Principale" onClick={this.uploadProfileTrigger}/></div>
                             <div className="actions">
                             </div>
                         </div>

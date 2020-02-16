@@ -29,7 +29,7 @@ export class ProfilePeek extends Component {
     }
 
     handleLike = (e) => {
-        Axios.post("//api/like", {
+        Axios.post("http://localhost:8080/api/like", {
             id : this.props.auth.uid,
             token : this.props.auth.key,
             login : this.state.login
@@ -65,7 +65,7 @@ export class ProfilePeek extends Component {
             <div className="col card profilePeek">
                 <div className={this.state.log ? "online-badge" : "online-badge red"}></div>
                 <div className="profile-image activator" onMouseDown={(e) => {this.redirect(e, this.state.login)}}>
-                    <img src={"//" + this.state.profilePic} alt="" className="activator"/>
+                    <img src={"http://localhost:8080/" + this.state.profilePic} alt="" className="activator"/>
                 </div>
                 <div className="profilePeekActions">
                     <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>

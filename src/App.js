@@ -7,7 +7,7 @@ import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import ProfileList from './components/profile/ProfileList';
 import ProfileEdit from './components/profile/ProfileEdit'; 
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import ProtectedRoute, { NotAuthRoute } from './components/auth/ProtectedRoute';
 import MatchList from './components/profile/MatchList';
 import ForgotPassword from './components/auth/ForgotPassword';
 import Historic from './components/hist/Historic';
@@ -25,7 +25,7 @@ class App extends Component {
         <div className="App">
           <Navbar />
           <Switch>
-            <Route exact path="/" component={Dashboard} />
+            <NotAuthRoute exact path="/" component={Dashboard} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <ProtectedRoute path="/profiles/:user_id" component={Profile} />
             <ProtectedRoute path="/profiles-list" component={ProfileList} />
@@ -36,9 +36,9 @@ class App extends Component {
             <Route path="/profiles-list" component={ProfileList} />
             <Route path="/profile-edit" component={ProfileEdit} />
             <Route path="/match" component={ProfileList} /> */}
-            <Route path="/signin" component={SignIn} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/act/:token" component={Dashboard} />
+            <NotAuthRoute path="/signin" component={SignIn} />
+            <NotAuthRoute path="/signup" component={SignUp} />
+            <NotAuthRoute path="/act/:token" component={Dashboard} />
           </Switch>
         </div>
       </BrowserRouter>
