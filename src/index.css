@@ -533,3 +533,7 @@ code {
 #profil_pic {
   display: none;
 }
+
+.side_profile {
+  height: 100%;
+}

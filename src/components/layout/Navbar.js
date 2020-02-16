@@ -34,8 +34,8 @@ class Navbar extends Component {
 
     render() {
         const auth = this.props.auth.id !== -1 && this.props.auth.key != null;
-        const main_links = auth ? <SignedInLinks onLogout={this.handleLogout}/> : <SignedOutLinks />;
-        const side_links = auth ? <SignedInLinksSidebar onClickLink={this.handleNav} onLogout={this.handleLogout}/> : <SignedOutLinksSidebar onClickLink={this.handleNav}/>;
+        const main_links = auth ? <SignedInLinks onLogout={this.handleLogout} state={this.props.auth}/> : <SignedOutLinks />;
+        const side_links = auth ? <SignedInLinksSidebar onClickLink={this.handleNav} onLogout={this.handleLogout} state={this.props.auth}/> : <SignedOutLinksSidebar onClickLink={this.handleNav}/>;
         // const main_links = <div><SignedInLinks onLogout={this.handleLogout}/><SignedOutLinks /></div>;
         // const side_links = <div><SignedInLinksSidebar onClickLink={this.handleNav} onLogout={this.handleLogout}/><SignedOutLinksSidebar onClickLink={this.handleNav}/></div>;
         return (

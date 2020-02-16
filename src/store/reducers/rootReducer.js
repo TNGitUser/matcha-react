@@ -1,7 +1,9 @@
 const initState = {
     auth : {
         uid : -1,
-        key : null
+        key : null,
+        firstname : "",
+        lastname : ""
     },
     profiles : [
         { login : 0,
@@ -57,7 +59,9 @@ const rootReducer = (state = initState, action) => {
             ...state,
             auth : {
                 uid : -1,
-                key : null
+                key : null,
+                firstname : "",
+                lastname : ""
             },
             profiles : [],
             chat : [],
@@ -69,7 +73,9 @@ const rootReducer = (state = initState, action) => {
             ...state,
             auth : {
                 uid : action.payload.uid,
-                key : action.payload.key
+                key : action.payload.key,
+                firstname : action.payload.firstname,
+                lastname : action.payload.lastname
             }
         }
     }

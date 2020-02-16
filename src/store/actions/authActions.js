@@ -1,10 +1,12 @@
 
-export const authLogin = (user_id, user_token) => {
+export const authLogin = (user_id, user_token, fname, lname) => {
     return {
         type : "AUTH_USER",
         payload : {
             uid : user_id,
-            key : user_token
+            key : user_token,
+            firstname : fname,
+            lastname : lname
         }
     }
 }

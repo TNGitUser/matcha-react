@@ -41,21 +41,25 @@ export class SignIn extends Component {
             const status = log_status.status ? true : false;
             var user = -1;
             if (status) {
-                user = log_status.id;
-                let token = log_status.token;
-                this.props.authUser(user, token);
+                user = log_status.success.id;
+                let token = log_status.success.token;
+                this.props.authUser(user, token, log_status.success.firstname, log_status.success.lastname);
                 this.props.history.push("/lucky");
                 //this.askForList(user, token);
             } else {
                 if (log_status.error === "email") {
                     var mail_input = document.getElementById("email");
                     mail_input.classList.add("login-error");
+                    M.toast({html : "L'email entré est incorrect.", classes: "red"});
                     // console.log("Mail error");
                 }
                 else if (log_status.error === "password") {
                     var pwd_input = document.getElementById("password");
                     pwd_input.classList.add("login-error");
+                    M.toast({html : "Le mot de passe entré est incorrect.", classes: "red"});
                     // console.log("Password error");
+                } else if (log_status.error === "active") {
+                    M.toast({html : "Ce compte n'est pas activé.", classes: "red"});
                 }
                 else console.log("Unknown error");
             }
@@ -111,7 +115,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        authUser : (id, token) => { dispatch(authLogin(id, token)) },
+        authUser : (id, token, fname, lname) => { dispatch(authLogin(id, token, fname, lname)) },
         populateProfiles : (profiles) => { dispatch(getProfile(profiles)) }
     }
 }
