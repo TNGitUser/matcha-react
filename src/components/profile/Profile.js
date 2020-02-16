@@ -13,9 +13,52 @@ export class Profile extends Component {
         };
     }
 
+    handleChat = () => {
+        M.toast({html : "Cette fonctionnalité n'est pas encore disponible.", classes: ""});
+    }
+
+    handleReport = (e) => {
+        Axios.post("http://10.12.10.19:8080/api/report", {
+            id : this.props.auth.uid,
+            token : this.props.auth.key,
+            login : this.state.profile.login
+        }).then(response => {
+            let status = response.data.status;
+            if (status === 0)
+            {
+                M.toast({html : "Une erreur s'est produite. Merci de réessayer.", classes: "red"});
+            } else {
+                M.toast({html : "Le signalement de ce compte a bien été effectué.", classes : "orange"}); 
+            }
+        })
+    }
+
+    handleLike = (e) => {
+        console.log(this.props);
+        Axios.post("http://10.12.10.19:8080/api/like", {
+            id : this.props.auth.uid,
+            token : this.props.auth.key,
+            login : this.state.profile.login
+        }).then(response => {
+            let status = response.data.status;
+            if (status === 0)
+            {
+                M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+            } else {
+                let like = response.data.success;
+                this.setState({
+                    profile : {
+                        ...this.state.profile,
+                        myLikeTo : like === "liked" ? true : false,
+                        match : like === "MATCH" ? true : false
+                    }
+                })
+            }
+        })
+    }
+
     componentDidMount = () => {
         Axios.get("http://10.12.10.19:8080/api/profil/" + this.props.match.params['user_id'] + "?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
-            console.log(response.data);
             let status = response.data.status;
 
             if (status === 0) {
@@ -27,23 +70,18 @@ export class Profile extends Component {
         }).catch(err => {
             console.log(err);
         })
-
-        var elems = document.querySelectorAll('.carousel');
-        M.Carousel.init(elems);
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
         let carousel = document.querySelector('.carousel');
-        M.Carousel.init(carousel, {indicators:true, fullWidth:false, dist:0});
+        M.Carousel.init(carousel, {indicators:true});
     }
 
     render() {
         var i = 0;
         const user_profile = this.state.profile;
-        var wants = null;
-        var sex = null;
-        var pictures = null;
-        var arr = null;
+        var wants, sex, pictures, arr, liked_style, liked_icon_style = null;
+        console.log(user_profile);
         if (user_profile) {
             
             sex = user_profile.gender;
@@ -57,16 +95,20 @@ export class Profile extends Component {
             if (user_profile.arr != null) {
                 arr = ", " + user_profile.arr + "ème";
             }
+            
             pictures = user_profile.images.length ? (
                 <div className="carousel">
                 <h5 className="center">Petit aperçu de moi ;)</h5>
                     {user_profile.images.map((image, index) => {
                         return (// eslint-disable-next-line
-                            <a key={index} className="carousel-item images"><img src={image} alt="Some stuff"/></a>
+                            <a key={index} className="carousel-item images"><img src={"http://10.12.10.19:8080/" + image['link']} alt="Some stuff"/></a>
                         )
                     })}
                 </div>
             ) : null;
+
+            liked_style = user_profile.match ? "matched" : user_profile.myLikeTo ? "liked" : user_profile.likedBy ? "likedBy" : "unliked";
+            liked_icon_style = user_profile.match ? "matched" : user_profile.myLikeTo ? "icon-liked" : user_profile.likedBy ? "likedBy" : "";
         }
         const page = user_profile ? (
         (
@@ -75,13 +117,13 @@ export class Profile extends Component {
                     <div className="col">
                         <div className="row s4 center fullprofile-holder"><img src={user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
                         <div className="actions">
-                            <a href="#like" className="btn-floating btn-large waves-effect waves-light unliked">
-                                <i className="fa fa-heart" aria-hidden="true"></i>
+                            <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
+                                <i className={"fa" + (user_profile.match ? " fa-star " : user_profile.likedBy ? " fa-question " : " fa-heart ") + liked_icon_style} aria-hidden="true"></i>
                             </a>
-                            <a href="#!" className="btn-floating btn-large disabled">
+                            <a href="#!" className={ user_profile.match ? "btn-floating btn-large" : "btn-floating btn-large disabled" } onClick={this.handleChat}>
                                 <i className="material-icons">message</i>
                             </a>
-                            <a href="#!" className="btn-floating btn-large yellow darken-3">
+                            <a href="#!" className="btn-floating btn-large yellow darken-3" onClick={this.handleReport}>
                                 <i className="material-icons">warning</i>
                             </a>
                         </div>
@@ -100,10 +142,7 @@ export class Profile extends Component {
                     <div className="col s4 center profile-info"><i className={wants}></i> {user_profile.orientation} </div>
                 </div>
                 <div className="divider center"></div>
-                <div className="section container">
-                    {pictures}
-                </div>
-                <div className="section container">
+                <div className="section container ">
                     <h5 className="center">Intérêts</h5>
                     <div className="row profile-tags">
                         { user_profile.tags.length ? user_profile.tags.map((tag, index) => {
@@ -114,6 +153,10 @@ export class Profile extends Component {
                             )
                         }) : <div className="red-text">No tags</div> }
                     </div>
+                </div>
+                <div className="divider center"></div>
+                <div className="section container">
+                    {pictures}
                 </div>
             </div>
         )) : (  <div className="preloader-wrapper active center-loader">

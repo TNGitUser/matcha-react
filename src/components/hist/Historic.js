@@ -15,7 +15,7 @@ class UserView extends Component {
     render() {
         return (
             <li className="collection-item avatar" key={ this.state.login } onMouseDown={this.props.redirect}>
-                <img src={ this.state.profilePic } alt="Profile visual" className="circle"/>
+                <img src={ "http://10.12.10.19:8080/" + this.state.profilePic['link'] } alt="Profile visual" className="circle"/>
                 <span className="title">{ this.state.firstname } { this.state.lastname }</span>
                 <p>{this.state.age} ans<br/> {this.state.city}</p>
                 <span className="secondary-content">{this.state.count}</span>

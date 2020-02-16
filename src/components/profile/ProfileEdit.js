@@ -22,7 +22,8 @@ export class ProfileEdit extends Component {
             display_date : null,
             new_password : null,
             nv_password : null,
-            places : ["Paris"]
+            places : [],
+            cityIsValid : true
         };
     }
 
@@ -83,6 +84,10 @@ export class ProfileEdit extends Component {
         let today = new Date();
         let birth = Date.parse(this.state.birth);
         
+        if (!this.state.cityIsValid) {
+            M.toast({html : "Merci de mettre une des villes proposées ou de contacter le staff.", classes : "red"});
+            return ;   
+        }
         if (/*this.state.age < 18 || this.state.age > 125 || */subYears(today, 18).getTime() < birth || subYears(today, 125).getTime() > birth) {
             M.toast({html : "Merci de mettre un âge entre 18 et 125 ans.", classes : "red"});
             return ;
@@ -114,8 +119,28 @@ export class ProfileEdit extends Component {
         }).catch(e => {console.log(e)})
     }
 
+    handlePositionChangeAC = (place) => {
+        let valid = true;
+        if (this.state.places.includes(place)) {
+            document.querySelector(".check-pos").classList.remove("fa-times");
+            document.querySelector(".check-pos").classList.remove("red-text");
+            document.querySelector(".check-pos").classList.add("fa-check");
+            document.querySelector(".check-pos").classList.add("green-text");
+        } else {
+            document.querySelector(".check-pos").classList.remove("fa-check");
+            document.querySelector(".check-pos").classList.remove("green-text");
+            document.querySelector(".check-pos").classList.add("fa-times");
+            document.querySelector(".check-pos").classList.add("red-text");
+            valid = false;
+        }
+        this.setState({
+            city : place,
+            cityIsValid : valid
+        })
+    }
+
     handlePositionChange = (e) => {
-        console.log(e.target.value);
+        let valid = true;
         if (this.state.places.includes(e.target.value)) {
             document.querySelector(".check-pos").classList.remove("fa-times");
             document.querySelector(".check-pos").classList.remove("red-text");
@@ -126,19 +151,30 @@ export class ProfileEdit extends Component {
             document.querySelector(".check-pos").classList.remove("green-text");
             document.querySelector(".check-pos").classList.add("fa-times");
             document.querySelector(".check-pos").classList.add("red-text");
+            valid = false;
         }
         this.setState({
-            city : e.target.value
+            city : e.target.value,
+            cityIsValid : valid
         })
     }
 
-    uploadImage = (e) => {
-        const formData = new FormData()
+    uploadProfileTrigger = (e) => {
+        this.inputElement.click();
+    }
 
-        var imagefile = document.querySelector('#supp_pic');
-        console.log(imagefile);
-        formData.append("Supp_pic", imagefile.files[0]);
-        console.log(imagefile.files[0]);
+    uploadProfile = (e) => {
+        var imagefile = document.querySelector('#profil_pic');
+
+        var idxDot = imagefile.files[0].name.lastIndexOf(".") + 1;
+        var extFile = imagefile.files[0].name.substr(idxDot, imagefile.files[0].name.length).toLowerCase();
+        if (!(extFile === "jpg" || extFile === "jpeg" || extFile === "png" || extFile === "svg" || extFile === "gif")) {
+            M.toast({ html: "Attention, le fichier n'est pas une image autorisée !", classes : "red"});
+            return ;
+        }
+
+        const formData = new FormData();
+        formData.append("profil", imagefile.files[0]);
 
         Axios({
             method: 'post',
@@ -148,7 +184,50 @@ export class ProfileEdit extends Component {
             })
             .then(function (response) {
                 //handle success
+                let status = response.data.status;
+                if (status === 0) {
+                    M.toast({ html: response.data.error, classes : "red"});
+                    return ;
+                } else {
+                    M.toast({ html: "Image de profile ajoutée.", classes : "green"});
+                    console.log(response.data.success);
+                    document.getElementById("profil_pic_trigger").setAttribute("src", "http://10.12.10.19:8080/" + response.data.success);
+                }
+            })
+            .catch(function (response) {
+                //handle error
                 console.log(response);
+            });
+    }
+
+    uploadImage = (e) => {
+        var imagefile = document.querySelector('#supp_pic');
+
+        var idxDot = imagefile.files[0].name.lastIndexOf(".") + 1;
+        var extFile = imagefile.files[0].name.substr(idxDot, imagefile.files[0].name.length).toLowerCase();
+        if (!(extFile === "jpg" || extFile === "jpeg" || extFile === "png" || extFile === "svg" || extFile === "gif")) {
+            M.toast({ html: "Attention, le fichier n'est pas une image autorisée !", classes : "red"});
+            return ;
+        }
+
+        const formData = new FormData();
+        formData.append("Supp_pic", imagefile.files[0]);
+
+        Axios({
+            method: 'post',
+            url: 'http://10.12.10.19:8080/api/images?id=' + this.props.auth.uid + "&token=" + this.props.auth.key,
+            data: formData,
+            headers: {'content-type': 'undefined' }
+            })
+            .then(function (response) {
+                //handle success
+                let status = response.data.status;
+                if (status === 0) {
+                    M.toast({ html: response.data.error, classes : "red"});
+                    return ;
+                } else {
+                    M.toast({ html: "Image ajoutée. Merci de rafraichir la page pour voir les changements", classes : "green"});
+                }
             })
             .catch(function (response) {
                 //handle error
@@ -170,6 +249,26 @@ export class ProfileEdit extends Component {
                 }
             }
         }).catch(e => {console.log(e)});
+        this.setCitiesList();
+    }
+
+    setCitiesList = () => {
+        Axios.get("http://10.12.10.19:8080/api/get_cities").then(response => {
+            let cities = response.data;
+            var Position = document.querySelectorAll('.autocomplete');
+            var autocomplete_city = {};
+            var state_city = [];
+            cities.map(place => {
+                return autocomplete_city[place.city] = null;
+            });
+            cities.map(place => {
+                return state_city.push(place.city);
+            });
+            this.setState({
+                places : state_city
+            });
+            M.Autocomplete.init(Position, { data : autocomplete_city, limit : 5, minLength : 1, onAutocomplete : (place) => this.handlePositionChangeAC(place) });
+        });
     }
 
     componentDidUpdate() {
@@ -181,14 +280,6 @@ export class ProfileEdit extends Component {
 
         let selects = document.querySelectorAll('select');
         M.FormSelect.init(selects);
-
-        var Position = document.querySelectorAll('.autocomplete');
-        let autocomplete_city = {};
-        this.props.tags.map(tag => {
-            return autocomplete_city[tag] = null;
-        })
-        M.Autocomplete.init(Position, { data : {Paris : null}});
-
 
         let tags = document.querySelectorAll('.chips');
         let autocomplete_data = {};
@@ -204,17 +295,10 @@ export class ProfileEdit extends Component {
             onChipAdd : (chip) => {
                 let value = chip[0].childNodes[chip[0].childNodes.length - 3].textContent;
                 value = value.replace("close", "");
-                if (this.state.tags.includes(value)) {
-                    console.log("Tag does Exist");
-                } else {
-                    console.log("Tag does not exist");
+                if (!this.state.tags.includes(value)) {
                     this.setState({
                         tags : [...this.state.tags, value]
                     })
-                }
-                if (!this.props.tags.includes(value)) {
-                    console.log("must update database !");
-                    M.toast({html : "Must update the database ! Go and contact Jmondino !"});
                 }
             },
             onChipDelete : (e, data) => {
@@ -234,6 +318,7 @@ export class ProfileEdit extends Component {
         const user_profile = this.state.profile;
         var homo, hetero, wants, sex, pictures = null;
 
+        console.log(user_profile);
         if (user_profile) {
             sex = user_profile.gender;
             
@@ -247,9 +332,8 @@ export class ProfileEdit extends Component {
                 <div className="carousel">
                 <h5 className="center">Petit aperçu de moi ;)</h5>
                     {user_profile.images.map((image, index) => {
-                        console.log(image);
                         return (// eslint-disable-next-line
-                            <a key={index} className="carousel-item images"><img src={"http://10.12.10.19:8080" + image['link']} alt="Some stuff"/></a>
+                            <a key={index} className="carousel-item images"><img src={"http://10.12.10.19:8080/" + image['link']} alt="Some stuff"/></a>
                         )
                     })}
                 </div>
@@ -282,7 +366,8 @@ export class ProfileEdit extends Component {
                     <div className="divider center"></div>
                     <div className="row top-info">
                         <div className="col">
-                            <div className="row s4 center fullprofile-holder"><img src={user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
+                            <input id="profil_pic" type="file" onChange={this.uploadProfile} accept="image/*" ref={input => this.inputElement = input}/> 
+                            <div className="row s4 center fullprofile-holder"><img id="profil_pic_trigger" src={"http://10.12.10.19:8080/" + user_profile.profilePic} className="fullprofile-image center" alt="Principale" onClick={this.uploadProfileTrigger}/></div>
                             <div className="actions">
                             </div>
                         </div>
@@ -326,18 +411,6 @@ export class ProfileEdit extends Component {
                     </div>
                     <div className="divider center"></div>
                     <div className="section container">
-                        {pictures}
-                        <div className="file-field input-field">
-                            <div className="btn">
-                                <span>Ajouter image</span>
-                                <input id="supp_pic" type="file" onChange={this.uploadImage}/>
-                            </div>
-                            <div className="file-path-wrapper">
-                                <input className="file-path validate" type="text" />
-                            </div>
-                            </div>
-                    </div>
-                    <div className="section container">
                         <h5 className="center">Intérêts</h5>
                         <div className="tag-edit">
                             <div className="chips chips-autocomplete"></div>
@@ -355,6 +428,19 @@ export class ProfileEdit extends Component {
                                 )
                             }) : <div className="red-text">No tags</div> }
                         </div>
+                    </div>
+                    <div className="divider center"></div>
+                    <div className="section container">
+                        <div className="file-field input-field">
+                            <div className="btn">
+                                <span>Ajouter image</span>
+                                <input id="supp_pic" type="file" onChange={this.uploadImage} accept="image/*"/>
+                            </div>
+                            <div className="file-path-wrapper">
+                                <input className="file-path validate" type="text" />
+                            </div>
+                        </div>
+                        {pictures}
                     </div>
                 </form>
             </div>

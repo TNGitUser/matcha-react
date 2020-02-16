@@ -24,6 +24,10 @@ export class ProfilePeek extends Component {
         };
     }
 
+    handleChat = () => {
+        M.toast({html : "Cette fonctionnalité n'est pas encore disponible.", classes: ""});
+    }
+
     handleLike = (e) => {
         Axios.post("http://10.12.10.19:8080/api/like", {
             id : this.props.auth.uid,
@@ -33,7 +37,7 @@ export class ProfilePeek extends Component {
             let status = response.data.status;
             if (status === 0)
             {
-                M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                M.toast({html : response.data.error, classes: "red"});
             } else {
                 let like = response.data.success;
                 this.setState({
@@ -61,13 +65,13 @@ export class ProfilePeek extends Component {
             <div className="col card profilePeek">
                 <div className={this.state.log ? "online-badge" : "online-badge red"}></div>
                 <div className="profile-image activator" onMouseDown={(e) => {this.redirect(e, this.state.login)}}>
-                    <img src={this.state.profilePic} alt="" className="activator"/>
+                    <img src={"http://10.12.10.19:8080/" + this.state.profilePic} alt="" className="activator"/>
                 </div>
                 <div className="profilePeekActions">
                     <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
                         <i className={"fa" + (this.state.match ? " fa-star " : this.state.likedBy ? " fa-question " : " fa-heart ") + liked_icon_style} aria-hidden="true"></i>
                     </a>
-                    <a href="#!" className={ this.state.match ? "btn-floating btn-large" : "btn-floating btn-large disabled" }>
+                    <a href="#!" className={ this.state.match ? "btn-floating btn-large" : "btn-floating btn-large disabled" } onClick={this.state.match ? this.handleChat : null}>
                         <i className="material-icons">message</i>
                     </a>
                 </div>

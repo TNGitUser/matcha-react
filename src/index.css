@@ -270,7 +270,7 @@ code {
 }
 
 .carousel {
-  max-height: 300px;
+  /* max-height: 300px; */
   overflow: visible;
   /*perspective: none;
   -webkit-perspective: none;*/
@@ -291,6 +291,7 @@ code {
 
 .whole-profile {
   margin-top: 4em;
+  margin-bottom: 10em;
   padding-top: 10px;
   border-radius : 30px 30px 0 0;
   /*border-radius : 30px ;*/
@@ -525,4 +526,8 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#profil_pic {
+  display: none;
 }
