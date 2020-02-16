@@ -81,7 +81,6 @@ export class Profile extends Component {
         var i = 0;
         const user_profile = this.state.profile;
         var wants, sex, pictures, arr, liked_style, liked_icon_style = null;
-        console.log(user_profile);
         if (user_profile) {
             
             sex = user_profile.gender;
@@ -115,7 +114,7 @@ export class Profile extends Component {
             <div className="container white whole-profile z-depth-3">
                 <div className="row top-info">
                     <div className="col">
-                        <div className="row s4 center fullprofile-holder"><img src={user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
+                        <div className="row s4 center fullprofile-holder"><img src={"http://10.12.10.19:8080/" + user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
                         <div className="actions">
                             <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
                                 <i className={"fa" + (user_profile.match ? " fa-star " : user_profile.likedBy ? " fa-question " : " fa-heart ") + liked_icon_style} aria-hidden="true"></i>

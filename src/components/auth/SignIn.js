@@ -50,12 +50,12 @@ export class SignIn extends Component {
                 if (log_status.error === "email") {
                     var mail_input = document.getElementById("email");
                     mail_input.classList.add("login-error");
-                    console.log("Mail error");
+                    // console.log("Mail error");
                 }
                 else if (log_status.error === "password") {
                     var pwd_input = document.getElementById("password");
                     pwd_input.classList.add("login-error");
-                    console.log("Password error");
+                    // console.log("Password error");
                 }
                 else console.log("Unknown error");
             }

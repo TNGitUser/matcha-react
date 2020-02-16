@@ -59,6 +59,7 @@ class ProfileList extends Component {
         sort_pop : 0,
         sort_dst : 0,
         sort_tsyn : 0,
+        available : true
       };
     }
 
@@ -97,8 +98,15 @@ class ProfileList extends Component {
       this.setState({
         [e.target.id] : var_state === 0 ? 1 : var_state === 1 ? 2 : 0
       }, () => {
-        this.askForList();
-        this.askForList();
+        if (this.state.available) {
+          this.askForList();
+          this.askForList();
+        } else { 
+        this.setState({
+          filtered_profiles : [],
+          max_page : 0,
+          page : 0  
+        });}
       });
     }
 
@@ -157,6 +165,13 @@ class ProfileList extends Component {
 
     setOutput = () => {
       let result = [];
+      if (!this.state.available) {
+        this.setState({
+          filtered_profiles : [],
+          max_page : 0,
+          page : 0  
+        });
+      };
       if (this.props.profiles) {
         this.props.profiles.forEach((profile) => {
           if (profile.age >= this.state.filter.value[0] && profile.age <= this.state.filter.value[1] && hasTag(this.state.filter_tags, profile)
@@ -185,7 +200,11 @@ class ProfileList extends Component {
           let profiles_get = response.data;
           if (profiles_get) {
               if (profiles_get.status !== 1) {
-                  M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                //M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
+                M.toast({html : profiles_get.error, classes: "red"});
+                this.setState({
+                  available : false,
+                });
               } else {
                 this.props.populateProfiles(profiles_get.success);
                 this.setOutput();

@@ -87,8 +87,6 @@ const rootReducer = (state = initState, action) => {
     }
     else if (action.type === "PROFILE_UPDATE") {
         let index = getIndex(action.login, state.profiles, 'login');
-        console.log(index);
-        console.log(state);
         if (index !== -1) {
             return {
                 ...state,

@@ -30,10 +30,7 @@ class Dashboard extends Component {
             <div className="fullpage">
                 <div className="full-love">
                     <img src="/img/ItCouldBeYou.jpg" className="full-love-img" alt="It could be you !"/>
-                    <h2 className="catch">Ça pourrait-être vous !</h2>
-                </div>
-                <div className="rest-for-mobile hide-on-med-and-up">
-                    ojpinobde
+                    <h2 className="catch" onClick={() => { this.props.history.push("/signin")}}>Ça pourrait-être vous !</h2>
                 </div>
             </div>
         )
