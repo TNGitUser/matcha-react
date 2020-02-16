@@ -18,7 +18,7 @@ class Dashboard extends Component {
         if (this.state.token != null) {
         Axios.get("http://localhost:8080/api/active?token=" + this.state.token).then(
             res => {
-                M.toast({html : "Great ! Your accound was activated ", classes : "green toast-container-activation"});
+                M.toast({html : "Bienvenue ! Votre compte est désormais actif. ", classes : "green toast-container-activation"});
             }).catch(e => {
                 console.log(e);
             })
