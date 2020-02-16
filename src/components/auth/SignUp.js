@@ -43,7 +43,11 @@ export class SignUp extends Component {
         }
         Axios.post("http://localhost:8080/api/create_user", {...this.state}).then((response) => {
             const data = response.data;
-            M.toast({html: data, classes : "yellow"});    
+            if (data.status === 1) {
+                M.toast({html: data.success, classes : "green"});
+            } else {
+                M.toast({html: data.error, classes : "red"});
+            }
         }).catch((error) => {
             console.log(error);
           });
