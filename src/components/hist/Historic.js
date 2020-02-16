@@ -15,7 +15,7 @@ class UserView extends Component {
     render() {
         return (
             <li className="collection-item avatar" key={ this.state.login } onMouseDown={this.props.redirect}>
-                <img src={ "http://10.12.10.19:8080/" + this.state.profilePic['link'] } alt="Profile visual" className="circle"/>
+                <img src={ "//" + this.state.profilePic['link'] } alt="Profile visual" className="circle"/>
                 <span className="title">{ this.state.firstname } { this.state.lastname }</span>
                 <p>{this.state.age} ans<br/> {this.state.city}</p>
                 <span className="secondary-content">{this.state.count}</span>
@@ -37,7 +37,7 @@ class Historic extends Component {
     }
 
     componentDidMount() {
-        Axios.post("http://10.12.10.19:8080/api/get_historic", {
+        Axios.post("//api/get_historic", {
             id : this.props.auth.uid,
             token : this.props.auth.key
         }).then((response) => {

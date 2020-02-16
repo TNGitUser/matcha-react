@@ -147,7 +147,7 @@ class ProfileList extends Component {
     }
 
     askForTags = () => {
-      Axios.get("http://10.12.10.19:8080/api/get_tags").then(response => {
+      Axios.get("//api/get_tags").then(response => {
           let tags = response.data;
           if (tags.length === 0 ) {
             M.toast({html : "No tags retrieved.", classes: "red"});
@@ -189,7 +189,7 @@ class ProfileList extends Component {
     }
 
     askForList = () => {
-      Axios.post("http://10.12.10.19:8080/api/get_everyone", {
+      Axios.post("//api/get_everyone", {
         "id" : this.props.auth.uid,
         "token" : this.props.auth.key,
         "age" : this.state.sort_age,

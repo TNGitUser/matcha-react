@@ -65,7 +65,7 @@ class ProfileList extends Component {
     }
 
     onConstruct = () => {
-      Axios.get("http://10.12.10.19:8080/api/my_account?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
+      Axios.get("//api/my_account?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
             if (response.data != null) {
                 if (response.data.status !== 1) {
                     M.toast({html : "An error occurred. Please retry later or contact staff.", classes: "red"});
@@ -169,7 +169,7 @@ class ProfileList extends Component {
     }
 
     askForTags = () => {
-      Axios.get("http://10.12.10.19:8080/api/get_tags").then(response => {
+      Axios.get("//api/get_tags").then(response => {
           let tags = response.data;
           if (tags.length === 0 ) {
             M.toast({html : "No tags retrieved.", classes: "red"});
@@ -204,7 +204,7 @@ class ProfileList extends Component {
     }
 
     askForList = () => {
-      Axios.post("http://10.12.10.19:8080/api/suggest_list", {
+      Axios.post("//api/suggest_list", {
         "id" : this.props.auth.uid,
         "token" : this.props.auth.key,
         "age" : this.state.sort_age,

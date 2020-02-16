@@ -27,7 +27,7 @@ class Navbar extends Component {
         if (!(this.props.auth && this.props.auth.uid && this.props.auth.key)) {
             return ;
         }
-        Axios.get("http://10.12.10.19:8080/api/logout?id=" + this.props.auth.uid + "&token=" + this.props.auth.key);
+        Axios.get("//api/logout?id=" + this.props.auth.uid + "&token=" + this.props.auth.key);
         this.props.authLogout();
         M.Sidenav.getInstance(this.Sidenav).close();
     }

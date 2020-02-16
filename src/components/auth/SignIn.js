@@ -18,7 +18,7 @@ export class SignIn extends Component {
     }
 
     askForList = (id, key) => {
-        Axios.get("http://10.12.10.19:8080/api/suggest_list?id=" + id + "&token=" + key).then(response => {
+        Axios.get("//api/suggest_list?id=" + id + "&token=" + key).then(response => {
             let profiles_get = response.data;
             if (profiles_get) {
                 if (profiles_get.status !== 1) {
@@ -36,7 +36,7 @@ export class SignIn extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        Axios.post("http://10.12.10.19:8080/api/login", {email : this.state.email, password : this.state.password}).then((response) => {
+        Axios.post("http://localhost:8080/api/login", {email : this.state.email, password : this.state.password}).then((response) => {
             const log_status = response.data;
             const status = log_status.status ? true : false;
             var user = -1;

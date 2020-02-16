@@ -18,7 +18,7 @@ export class Profile extends Component {
     }
 
     handleReport = (e) => {
-        Axios.post("http://10.12.10.19:8080/api/report", {
+        Axios.post("//api/report", {
             id : this.props.auth.uid,
             token : this.props.auth.key,
             login : this.state.profile.login
@@ -35,7 +35,7 @@ export class Profile extends Component {
 
     handleLike = (e) => {
         console.log(this.props);
-        Axios.post("http://10.12.10.19:8080/api/like", {
+        Axios.post("//api/like", {
             id : this.props.auth.uid,
             token : this.props.auth.key,
             login : this.state.profile.login
@@ -58,7 +58,7 @@ export class Profile extends Component {
     }
 
     componentDidMount = () => {
-        Axios.get("http://10.12.10.19:8080/api/profil/" + this.props.match.params['user_id'] + "?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
+        Axios.get("//api/profil/" + this.props.match.params['user_id'] + "?id=" + this.props.auth.uid + "&token=" + this.props.auth.key).then((response) => {
             let status = response.data.status;
 
             if (status === 0) {
@@ -100,7 +100,7 @@ export class Profile extends Component {
                 <h5 className="center">Petit aperçu de moi ;)</h5>
                     {user_profile.images.map((image, index) => {
                         return (// eslint-disable-next-line
-                            <a key={index} className="carousel-item images"><img src={"http://10.12.10.19:8080/" + image['link']} alt="Some stuff"/></a>
+                            <a key={index} className="carousel-item images"><img src={"//" + image['link']} alt="Some stuff"/></a>
                         )
                     })}
                 </div>
@@ -114,7 +114,7 @@ export class Profile extends Component {
             <div className="container white whole-profile z-depth-3">
                 <div className="row top-info">
                     <div className="col">
-                        <div className="row s4 center fullprofile-holder"><img src={"http://10.12.10.19:8080/" + user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
+                        <div className="row s4 center fullprofile-holder"><img src={"//" + user_profile.profilePic} className="fullprofile-image center" alt="Principale"/></div>
                         <div className="actions">
                             <a href="#like" onClick={this.handleLike} className={"btn-floating btn-large waves-effect waves-light " + liked_style}>
                                 <i className={"fa" + (user_profile.match ? " fa-star " : user_profile.likedBy ? " fa-question " : " fa-heart ") + liked_icon_style} aria-hidden="true"></i>

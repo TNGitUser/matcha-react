@@ -41,7 +41,7 @@ export class SignUp extends Component {
             M.toast({html:"Les mots de passe ne correspondent pas.", classes : "red"});
             return ;
         }
-        Axios.post("http://10.12.10.19:8080/api/create_user", {...this.state}).then((response) => {
+        Axios.post("//api/create_user", {...this.state}).then((response) => {
             const data = response.data;
             M.toast({html: data, classes : "yellow"});    
         }).catch((error) => {
